@@ -27,12 +27,15 @@ public class OurAptController extends LincActionController{
 	protected CommonFacade commonFacade;
 	  private PlatformTransactionManager transactionManager;
 	  Log log = LogFactory.getLog(getClass());
+
 	  protected DataMap paramMap = null;
 
 	  @Autowired
-	  public void setTransactionManager(PlatformTransactionManager transactionManager) {
+	  public void setTransactionManager(PlatformTransactionManager transactionManager)
+	  {
 	    this.transactionManager = transactionManager;
 	  }
+
 	  @Autowired
 	  @Qualifier("commonImpl")
 	  public void setCommonImpl(CommonFacade commonFacade) {
@@ -40,17 +43,17 @@ public class OurAptController extends LincActionController{
 	  }
 
 	  @ModelAttribute("requestParam")
-	  public DataMap requestParam(HttpServletRequest arg0, HttpServletResponse arg1) throws Exception {
+	  public DataMap requestParam(HttpServletRequest arg0, HttpServletResponse arg1)
+	    throws Exception
+	  {
 	    showParameters(arg0);
 	    this.paramMap = PUtil.getParameterDataMap(arg0);
 	    setSessionMenu(this.commonFacade, arg0, this.paramMap);
-	    if ("N".equals(this.paramMap.getString("RETOK"))) {
-	      arg1.sendRedirect("/main.do");
-	    }
 	    return this.paramMap;
 	  }
 
-	  public void showParameters(HttpServletRequest request) {
+	  public void showParameters(HttpServletRequest request)
+	  {
 	    this.log.debug("###############################################################");
 	    this.log.debug("REQUEST  URL : " + request.getRequestURL());
 	    Enumeration paramNames = request.getParameterNames();
@@ -59,8 +62,10 @@ public class OurAptController extends LincActionController{
 	      while (paramNames.hasMoreElements()) {
 	        String name = ((String)paramNames.nextElement()).toString();
 	        String value = StringUtils.defaultIfEmpty(request.getParameter(name), "");
+
 	        this.log.debug("PARAM : " + name.toUpperCase() + "\t VALUE : " + value);
 	      }
+
 	      this.log.debug("###############################################################");
 	    } catch (Exception e) {
 	      e.printStackTrace();
@@ -68,7 +73,7 @@ public class OurAptController extends LincActionController{
 	  }
 	  
 	  
-	  @RequestMapping({"/apt/apt_main.do"})
+	  @RequestMapping({"/apt_main.do"})
 	  public ModelAndView apt_main(@ModelAttribute("requestParam") DataMap dataMap, HttpServletRequest request, HttpServletResponse response)
 	  {
 	    String modelName = "";

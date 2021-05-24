@@ -1,94 +1,14 @@
-<%-- <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" import="career.framework.common.DataMap"%> --%>
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <!DOCTYPE html>
 <html lang="ko">
 
 <head>
-<%-- 	<%@ include file="/static_root/inc/top.jsp" %> --%>
+	<%@ include file="/static_root/inc/apt_top.jsp" %>
 	<script type="text/javascript">
 		$(document).ready(function() {
 			
-			if("<c:out value="${INIT_DATA.ERROR_CD}"/>" == "999"){
-				alert("로그인에 실패하였습니다.\n아이디 및 패스워드를 확인하세요");
-			}
-			
-			doPopup();
-			
-			//학생상담센터 전수검사 파업창 쿠키 확인
-			// 검사기간 끝나고 나면 주석처리 매년 사용됨
-			if (getcookie("popUcPsyMain")==null){
-				$("#popUcPsyMain").show();
-			}else{
-				$("#popUcPsyMain").hide();
-			}
-			
-			if (getcookie("popCaMain")==null && "${INIT_DATA.CANOT}" != "Y" && "${INIT_DATA.TAR_YN}" == "Y"){
-				$("#popCaMain").show();
-			}else{
-				$("#popCaMain").hide();
-			}
 		});
-		function fnGoPage(conArea){
-			if(conArea == 'B1'){
-				location.href = "/user/In/InCt030L.do?CURRENT_MENU_CODE=MENU0192&TOP_MENU_CODE=MENU0189";
-			}else if(conArea == 'P2'){
-				$('#CON_AREA1').val('');
-				$('#CON_AREA2').val('Y');
-				$('#CON_AREA4').val('');
-				$('#frm').attr("action", "/user/Uc/UcStP2Cm.do");
-				$('#frm').submit();
-			}else if(conArea == 'B3'){
-				location.href = "/common/index.do?jpath=/user/Ep/file_down2&fileDiv=2";
-			}
-		}
 		
-		//외부 회원가입
-		function fnJoin(){
-			gfnOpenLayerPopup('/common/index.do?jPath=/common/pop_normalUserJoin');
-		}
-		
-		//멘토 회원가입
-		function fnJoin3(){
-			gfnOpenLayerPopup('/common/index.do?jPath=/common/Mt/pop_addMentor&ADMIN_YN=N');
-		}
-		
-		//기업 회원가입
-		function fnJoin2(){
-			
-			var strUrl= '/join.do';
-			var popup= window.open('about:blank','CompJoin','left=100,width=1000,height=800,scrollbars=yes');
-			popup.focus();
-	
-			$('#login').attr("action", strUrl);
-			$('#login').attr("target", "CompJoin");
-			$('#login').submit();
-			$('#login').attr("target", "");
-		}
-		
-		
-		//회원가입 선택
-		function fnJoinSelect(){
-			gfnOpenLayerPopup('/common/index.do?jPath=/common/pop_selectUserJoin');
-		}
-		
-		// 유저 타입변경
-		function fnchUserType(type){
-			$("#USR_TYPE").val(type);
-			
-			if(type == "S"){
-				$('#USR_S').addClass('on');
-				$('#USR_P').removeClass();
-				$('#USR_C').removeClass();
-			}else if(type == "P"){
-				$('#USR_P').addClass('on');
-				$('#USR_S').removeClass();
-				$('#USR_C').removeClass();
-			}else if(type == "C"){
-				$('#USR_C').addClass('on');
-				$('#USR_S').removeClass();
-				$('#USR_P').removeClass();
-			}
-			
-		}
 		
 		// 로그인
 		function fnLogin(){		
@@ -110,45 +30,6 @@
 					loginPortal();
 				}
 			}
-		}
-		
-		//포탈 로그인 처리 전 임시 로그인
-		function fnImsiLogin() {
-			$.ajax({
-				 type		: "POST"
-				,url		: "/login.do"
-				,dataType	: "json"
-				,data		: {
-					"INTG_UID" : $("#USRID").val()
-					,"USER_PWD" : $('#USRPWD').val()
-					,"COMMON_CAMP_GB" : "J"
-				}
-				,success : function(transport) {
-					if (transport.ERROR_CD == '900') { //로그인 성공
-						if(transport.AUTH0007_CNT != "0"){ // 비교과 마이페이지
-							$("#frm").attr("action", "/user/My/MyMg010L.do?CURRENT_MENU_CODE=MENU0063&TOP_MENU_CODE=MENU0008");
-						}else if(transport.SESSION_USER_TY_CD == "S"){ //학생
-							$("#frm").attr("action", "/user/My/MySt011L.do?CURRENT_MENU_CODE=MENU0044&TOP_MENU_CODE=MENU0007");
-						}else if(transport.SESSION_USER_TY_CD == "P"){ //교원
-							$("#frm").attr("action", "/user/My/MyPf011L.do?CURRENT_MENU_CODE=MENU0078&TOP_MENU_CODE=MENU0010");
-						}else if(transport.SESSION_USER_TY_CD == "A"){ //조교
-							$("#frm").attr("action", "/user/Co/CoAs010L.do?CURRENT_MENU_CODE=MENU0210&TOP_MENU_CODE=MENU0209");
-						}else if(transport.SESSION_USER_TY_CD == "T"){ //상담사
-							$("#frm").attr("action", "/user/Co/CoMc010L.do?ONLOAD=Y&CURRENT_MENU_CODE=MENU0074&TOP_MENU_CODE=MENU0009");
-						}else{
-							$("#frm").attr("action", "/user/Bd/BdCm010L.do?BD_NO=1&CURRENT_MENU_CODE=MENU0040&TOP_MENU_CODE=MENU0006");
-						}
-					
-						$("#frm").submit();
-					} else { //로그인 실패
-						alert("로그인에 실패하였습니다.\n아이디 및 패스워드를 확인하세요");
-						return;
-					}
-				}
-				,error : function(transport) { //ERROR
-					alert("로그인 중 오류가 발생하였습니다.");
-				}
-			});
 		}
 		
 		//서일대 포탈 로그인
@@ -193,159 +74,12 @@
 		}
 		
 		$(document).ready(function() {
-			$(".consult_hover").hide();
-	
-			$(".box_con").hover(function() {
-			    $(".consult_hover").animate({ "marginLeft": "0"}, 50);
-			    $(".consult_hover").show();
-			}, 
-			function() {
-			    $(".consult_hover").animate({"marginLeft": "100%"}, 50);
-			    $(".consult_hover").hide();
-			});	
 		});	
 		
-		function fncMainMenuMove(menuid, url,topcd) {
-			var currentMenuCd = "";
-			var main = document.frm;
-			$.ajax({ 
-				 type : "post"
-				,url  : "/moveMenu.do"
-				,data : {
-					"MENU_URL" 	  :url
-					,"CURRENT_MENU_CODE" : menuid
-				}
-				,dataType : "json"
-				,success : function(transport) {
-					if(transport.RET_MSG != ''){
-						if('${INIT_DATA.SESSION_USR_ID}' == ''){
-							alert("로그인 해주세요");
-						}else{
-							alert(transport.RET_MSG);
-						}
-					}else{
-						var resultMst = eval(transport.leftMenu);
-						currentMenuCd = resultMst.CURRENT_MENU_CODE;
-						if(url.indexOf("?") > -1){
-							main.action=url + "&CURRENT_MENU_CODE=" + currentMenuCd+ "&TOP_MENU_CODE=" + topcd;
-							main.submit();
-						}else
-						{
-							main.action=url + "?CURRENT_MENU_CODE=" + currentMenuCd+ "&TOP_MENU_CODE=" + topcd;
-							main.submit();
-						}
-					}
-					
-				}
-			});
-		}
-		
-		function fnEpPrmDetail(seq, gb){
-			var url = "/user/Ep/EpMng010PD.do?PRM_SEQ=" + seq;
-			if(gb == "G"){
-				url = "/user/Ep/EpMng010GD.do?PRM_SEQ=" + seq;
-			}
-			fncMainMenuMove("MENU0058",url,"MENU0006");
-		}
-		
-		function popCaClose(flag){
-			if(flag == "Y"){
-				exday=new Date();
-				exday.setDate(exday.getDate()+1);
-				document.cookie="popCaMain="+escape("yes")+"; expires="+exday.toGMTString()+"; ";
-			}
-			$("#popCaMain").hide();
-		}
 		
 		
 	</script>
 
-	<!-- 메인 슬라이드 -->
-	<link rel="stylesheet" type="text/css" href="/static_root/css/slick.css"/>
-	<link rel="stylesheet" type="text/css" href="/static_root/css/slick-theme.css"/>
-	<script type="text/javascript" src="/static_root/js/slick.js"></script>
-	<script>
-	$(document).ready(function() {
-		// 메인 - 카드형 비교과 프로그램
-		$('#MN_card_ext').slick({
-			infinite: false,
-			speed: 300,
-			slidesToShow: 4,
-			slidesToScroll: 1,
-			slide: 'div',
-			dots: false,
-			prevArrow: '<a class="card-prev" aria-label="Previous"><span><img src="/static_root/images/main/card_arr_prev.png" alt="카드형비교과Prev" /></span></a>',
-			nextArrow: '<a class="card-next" aria-label="Next"><span><img src="/static_root/images/main/card_arr_next.png" alt="카드형비교과Next" /></span></a>',
-		    responsive: [
-	               {
-		                 breakpoint: 2090,
-		                 settings: {
-		                   slidesToShow: 3,
-		                   slidesToScroll: 1,
-		                 }
-		               },
-	               {
-	                 breakpoint: 1747,
-	                 settings: {
-	                   slidesToShow: 2,
-	                   slidesToScroll: 1,
-	                   infinite: true,
-	                   variableWidth : true
-	                 }
-	               },
-	               {
-	                   breakpoint: 1329,
-	                   settings: {
-	                     slidesToShow: 1,
-	                     slidesToScroll: 1,
-	                     infinite: false,
-	                     variableWidth : false
-	                   }
-	                 },
-	                 {
-	                     breakpoint: 1199,
-	                     settings: {
-	                       slidesToShow: 3,
-	                       slidesToScroll: 1,
-	                       infinite: true,
-	                       centerMode : true,
-	                       variableWidth : true
-	                     }
-	                   },
-	               {
-	                 breakpoint: 989,
-	                 settings: {
-	                   slidesToShow: 3,
-	                   slidesToScroll: 1,
-	                   infinite: true,
-	                   centerMode : true,
-	                   variableWidth : true
-	                 }
-	               },
-	               {
-	                 breakpoint: 767,
-	                 settings: {
-	                   slidesToShow: 2,
-	                   slidesToScroll: 1,
-	                   infinite: true,
-	                   centerMode : true,
-	                   variableWidth : true
-	                 }
-	               },
-	               {
-		                 breakpoint: 479,
-		                 settings: {
-		                   slidesToShow: 1,
-		                   slidesToScroll: 1,
-		                   infinite: true,
-		                   centerMode : true,
-		                   variableWidth : true
-		                 }
-		               }
-	             ]
-		});
-	});
-	</script>
 </head>
 <body id="user" class="main_bd">
 	<form name="frm" id="frm" method="post" action="">
@@ -356,14 +90,14 @@
 	</form>
 	<div id="wrap">
 		<!-- 상단영역 -->
-		<%@ include file="/static_root/inc/header.jsp" %>
+		<%@ include file="/static_root/inc/apt_header.jsp" %>
 		<!-- 상단영역 끝 -->
 		
 		<!-- 메인 콘텐츠영역 -->
 		<div id="main_wrap">
 			<div class="mn_visual">
 				<div class="mn_slogan">
-					<h2>우리집 만들기 프로젝트</h2>
+					<h2>우리집 만들기의 첫걸음</h2>
 				</div>
 				<div class="mn_quick">
 					<ul class="clearfix">
@@ -373,7 +107,7 @@
 									<strong>아파트 정보</strong>
 									<span>Apartmane Infomation</span>
 								</dt>
-								<dd><span><img src="/static_root/images/main/mn_quick01.png" alt="학사 일정" /></span></dd>
+								<dd><span><img src="/static_root/apt/images/main/mn_quick01.png" alt="학사 일정" /></span></dd>
 							</dl>
 						</li>
 						<li onclick="window.open('https://stis.seoil.ac.kr', '_blank')">
@@ -382,7 +116,7 @@
 									<strong>입주자 관리</strong>
 									<span>Infomation</span>
 								</dt>
-								<dd><span><img src="/static_root/images/main/mn_quick02.png" alt="학사 정보" /></span></dd>
+								<dd><span><img src="/static_root/apt/images/main/mn_quick02.png" alt="학사 정보" /></span></dd>
 							</dl>
 						</li>
 						<li onclick="javascript:fncMainMenuMove('MENU0025','/common/userReady.do','MENU0008');">
@@ -391,7 +125,7 @@
 									<strong>회비관리</strong>
 									<span>Infomation</span>
 								</dt>
-								<dd><span><img src="/static_root/images/main/mn_quick03.png" alt="학생성공 네비게이터" /></span></dd>
+								<dd><span><img src="/static_root/apt/images/main/mn_quick03.png" alt="학생성공 네비게이터" /></span></dd>
 							</dl>
 						</li>
 					</ul>
@@ -453,15 +187,13 @@
 				</div>
 				
 			</div>
+			
 		</div>
 	</div>
 	<!-- 메인 콘텐츠영역 끝 -->
 	
-	<form name="introFrm" id="introFrm" method="post">
-	</form>
-	
 	<!-- 하단영역 -->
-	<%@ include file="/static_root/inc/footer.jsp" %>
+	<%@ include file="/static_root/inc/apt_footer.jsp" %>
 	<!-- 하단영역 끝 -->
 	
 </body>
