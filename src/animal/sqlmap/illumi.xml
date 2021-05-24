@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper      
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"      
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Illumi">
+
+	<select id="getMeetCnt" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT
+			COUNT(*) AS TOTAL_CNT
+		FROM TB_ILLUMI_MEET
+		WHERE 1 = 1
+		<if test="SCH_WORD != '' and SCH_WORD != null">
+			<choose>
+				<when test="SCH_TYPE == '01'.toString()">
+					AND MEET_NM LIKE CONCAT('%', #{SCH_WORD},'%')
+				</when>
+				<when test="SCH_TYPE == '02'.toString()">
+					AND MEET_PLACE LIKE CONCAT('%', #{SCH_WORD},'%')
+				</when>
+				<when test="SCH_TYPE == '03'.toString()">
+					AND MEET_DATE LIKE CONCAT('%', #{SCH_WORD},'%')
+				</when>
+				<otherwise>
+					AND(
+						MEET_NM LIKE CONCAT('%', #{SCH_WORD},'%')
+						OR
+						MEET_PLACE LIKE CONCAT('%', #{SCH_WORD},'%')
+						OR
+						MEET_DATE LIKE CONCAT('%', #{SCH_WORD},'%')
+						)
+				</otherwise>
+			</choose>
+		</if>
+	</select>
+	
+	<select id="getMeetList" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT
+			   A.MEET_SEQ
+			, A.MEET_NM  
+			, A.MEET_PLACE
+		    , (SELECT SUM(TARGET_CNT) FROM TB_ILLUMI_MEET_DTL WHERE MEET_SEQ = A.MEET_SEQ AND REFUND_YN != 'Y')AS TARGET_CNT
+		    , (SELECT SUM(ADULT_CNT) + SUM(ELE_CNT) + SUM(INF_CNT)  FROM TB_ILLUMI_MEET_DTL WHERE MEET_SEQ = A.MEET_SEQ AND REFUND_YN != 'Y')AS TOTAL_CNT
+		    , (SELECT FORMAT(SUM(DES_PLAN_AMT), 0) FROM TB_ILLUMI_MEET_DTL WHERE MEET_SEQ = A.MEET_SEQ AND REFUND_YN != 'Y')AS DES_PLAN_AMT
+            , (SELECT FORMAT(SUM(DES_AMT), 0) FROM TB_ILLUMI_MEET_DTL WHERE MEET_SEQ = A.MEET_SEQ AND REFUND_YN != 'Y')AS DES_AMT   
+		FROM TB_ILLUMI_MEET A 
+		WHERE 1 = 1
+		<if test="SCH_WORD != '' and SCH_WORD != null">
+			<choose>
+				<when test="SCH_TYPE == '01'.toString()">
+					AND MEET_NM LIKE CONCAT('%', #{SCH_WORD},'%')
+				</when>
+				<when test="SCH_TYPE == '02'.toString()">
+					AND MEET_PLACE LIKE CONCAT('%', #{SCH_WORD},'%')
+				</when>
+				<when test="SCH_TYPE == '03'.toString()">
+					AND MEET_DATE LIKE CONCAT('%', #{SCH_WORD},'%')
+				</when>
+				<otherwise>
+					AND(
+						MEET_NM LIKE CONCAT('%', #{SCH_WORD},'%')
+						OR
+						MEET_PLACE LIKE CONCAT('%', #{SCH_WORD},'%')
+						OR
+						MEET_DATE LIKE CONCAT('%', #{SCH_WORD},'%')
+						)
+				</otherwise>
+			</choose>
+		</if>
+	</select>
+	
+	<select id="getMeetDtlCnt" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT
+			COUNT(*) AS TOTAL_CNT
+		FROM TB_ILLUMI_MEET_DTL
+		WHERE 1 = 1
+		AND MEET_SEQ = #{MEET_SEQ}
+		<if test="SCH_WORD != null and SCH_WORD != ''">
+			AND (
+					DES_NM LIKE CONCAT('%', #{SCH_WORD},'%')
+					OR
+					NICK LIKE CONCAT('%', #{SCH_WORD},'%')
+				)
+		</if>
+		<if test="SCH_DES_YN != null and SCH_DES_YN != ''">
+			AND DES_YN = #{SCH_DES_YN}
+		</if>
+	</select>
+	
+	<select id="getMeetDtlList" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT
+			TB.*
+		FROM(
+			SELECT
+				T.*
+				, CEILING((RNUM)/#{PAGE_SIZE})  AS PAGE
+				, CAST(#{TOTAL_CNT} - RNUM +1 AS CHAR) AS RNUMUM
+			FROM(
+				SELECT
+				  MEET_DTL_SEQ
+				, MEET_SEQ
+				, NICK
+				, ADULT_CNT
+				, ELE_CNT
+				, INF_CNT
+				, TARGET_CNT
+				, FORMAT(DES_PLAN_AMT, 0)AS DES_PLAN_AMT
+				, DES_NM
+				, FORMAT(DES_AMT, 0)AS DES_AMT
+				, DES_DATE
+				, DES_YN
+				, CASE WHEN DES_YN = 'Y' THEN '입금' ELSE '미입금' END AS DES_YN_NM
+				, REFUND_YN
+				, REFUND_DATE
+				, @RNUM := @RNUM + 1  AS RNUM
+			FROM TB_ILLUMI_MEET_DTL ,(SELECT @RNUM := 0 ) STR	
+			WHERE 1 = 1
+			AND MEET_SEQ = #{MEET_SEQ}
+			<if test="SCH_WORD != null and SCH_WORD != ''">
+				AND (
+					DES_NM LIKE CONCAT('%', #{SCH_WORD},'%')
+					OR
+					NICK LIKE CONCAT('%', #{SCH_WORD},'%')
+				)
+			</if>
+			<if test="SCH_DES_YN != null and SCH_DES_YN != ''">
+				AND DES_YN = #{SCH_DES_YN}
+			</if>
+			ORDER BY MEET_DTL_SEQ DESC
+			)T
+		)TB
+		WHERE PAGE = #{CURR_PAGE}
+	</select>
+	
+	<insert id="InsertMeetData">
+		INSERT INTO TB_ILLUMI_MEET_DTL(
+			MEET_SEQ 
+		  , NICK    
+		  , ADULT_CNT 
+		  , ELE_CNT 
+		  , INF_CNT 
+		  , TARGET_CNT 
+		  , DES_PLAN_AMT  
+		  , DES_NM  
+		  , DES_AMT 
+		  , DES_DATE  
+		  , DES_YN  
+		  , REFUND_YN  
+		  , REFUND_DATE 
+		  , ETC 
+		  , UPDDATE
+		)VALUES(
+			#{MEET_SEQ} 
+		  , #{NICK}    
+		  , #{ADULT_CNT} 
+		  , #{ELE_CNT} 
+		  , #{INF_CNT} 
+		  , #{TARGET_CNT} 
+		  , #{DES_PLAN_AMT}  
+		  , #{DES_NM}  
+		  , #{DES_AMT}
+		  , #{DES_DATE}  
+		  , #{DES_YN}  
+		  , #{REFUND_YN} 
+		  , #{REFUND_DATE} 
+		  , #{ETC} 
+		  , NOW()
+		)
+		
+	</insert>
+	
+	<update id="UpdateMeetData">
+		UPDATE TB_ILLUMI_MEET_DTL SET
+			NICK	 = #{NICK}    
+		  , ADULT_CNT 	 = #{ADULT_CNT}
+		  , ELE_CNT      = #{ELE_CNT}
+		  , INF_CNT      = #{INF_CNT}
+		  , TARGET_CNT   = #{TARGET_CNT}
+		  , DES_PLAN_AMT  = #{DES_PLAN_AMT}  
+		  , DES_NM       = #{DES_NM}
+		  , DES_AMT      = #{DES_AMT}
+		  , DES_DATE     = #{DES_DATE}
+		  , DES_YN       = #{DES_YN}
+		  , REFUND_YN    = #{REFUND_YN}
+		  , REFUND_DATE  = #{REFUND_DATE}
+		  , ETC          = #{ETC}
+		  , UPDDATE      = NOW()
+		WHERE MEET_DTL_SEQ = #{MEET_DTL_SEQ}
+	</update>
+	
+	<select id="getMeetDataDetail" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT
+		    MEET_DTL_SEQ
+		  ,	MEET_SEQ 
+		  , NICK    
+		  , ADULT_CNT 
+		  , ELE_CNT 
+		  , INF_CNT 
+		  , TARGET_CNT 
+		  , DES_PLAN_AMT  
+		  , DES_NM  
+		  , DES_AMT 
+		  , DES_DATE  
+		  , DES_YN  
+		  , REFUND_YN  
+		  , REFUND_DATE 
+		  , ETC 
+		  , UPDDATE
+		FROM TB_ILLUMI_MEET_DTL
+		WHERE MEET_DTL_SEQ = #{MEET_DTL_SEQ}
+	</select>
+	
+	<delete id="DeleteMeetData">
+		DELETE FROM TB_ILLUMI_MEET_DTL
+		WHERE MEET_DTL_SEQ = #{MEET_DTL_SEQ}
+	</delete>
+	
+	<select id="getDanziList" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT
+		  CONCAT(DANZI, '단지')AS DANZI
+		  , COUNT(HOSU)AS HOSU_CNT
+		  , (SELECT COUNT(*) FROM TB_WARRANT_INFO WHERE DANZI = A.DANZI AND WARRANT_YN = 'Y')AS WARRANT_CNT
+		FROM TB_WARRANT_INFO A
+		GROUP BY DANZI
+	</select>
+	
+	<select id="getDongList" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT
+		  CONCAT(DONG, '동')AS DANZI
+		  , COUNT(HOSU)AS HOSU_CNT
+		  , (SELECT COUNT(*) FROM TB_WARRANT_INFO WHERE DONG = A.DONG AND WARRANT_YN = 'Y')AS WARRANT_CNT
+		FROM TB_WARRANT_INFO A
+		WHERE DANZI = #{SCH_TYPE}
+		GROUP BY DONG
+	</select>
+	
+	<select id="getIllumiWarrAvg" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT 
+		   TRUNCATE((TOTAL_CNT * 100) / 3724 , 2)AS TOTAL_AVG
+		 , TRUNCATE((TOTAL_CNT * 100) / 3467 , 2)AS TOTAL_AVG2
+		FROM (
+		    SELECT 
+		  		COUNT(*) AS TOTAL_CNT
+			FROM TB_WARRANT_INFO A
+			WHERE A.WARRANT_YN = 'Y'
+		)T
+	</select>
+	
+	<select id="getMainData" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT
+		    COUNT(*) AS AMT_YN_CNT
+		  , FORMAT(SUM(AMT), 0 ) AS TOTAL_AMT
+		FROM TB_WARRANT_INFO
+		WHERE AMT_YN = 'Y'
+	</select>
+	
+	
+	<select id="getAcctMstrCnt" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT
+			COUNT(*) AS TOTAL_CNT
+		FROM ILLUMI_ACCT_MSTR
+	</select>
+	
+	
+	<select id="getAcctMstrList" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT
+			TB.*
+		FROM(
+			SELECT
+				T.*
+				, CEILING((RNUM)/#{PAGE_SIZE})  AS PAGE
+				, CAST(#{TOTAL_CNT} - RNUM +1 AS CHAR) AS RNUMUM
+			FROM(
+				SELECT
+				  ACCT_MSTR_SEQ
+				, DONG
+				, HOSU
+				, ACCT_DATE
+				, DESOL_CONT
+				, CONT
+				, FORMAT(IN_AMT,0)AS IN_AMT
+				, FORMAT(OUT_AMT,0)AS OUT_AMT
+				, FORMAT(AMT,0)AS AMT
+				, ETC1
+				, ETC2
+				, DATE_FORMAT(REGDATE, '%Y-%m-%d')AS REGDATE 			
+				, DATE_FORMAT(UPDDATE, '%Y-%m-%d')AS UPDDATE 			
+				, @RNUM := @RNUM + 1  AS RNUM
+			FROM ILLUMI_ACCT_MSTR ,(SELECT @RNUM := 0 ) STR	
+			WHERE 1 = 1
+			ORDER BY ACCT_DATE DESC
+			)T
+		)TB
+		WHERE PAGE = #{CURR_PAGE}
+		ORDER BY ACCT_DATE DESC
+	</select>
+	
+	
+	<select id="getAcct_totAmt" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT 
+			FORMAT(SUM(IN_AMT),0) AS TOTAL_AMT
+		FROM ILLUMI_ACCT_MSTR
+	</select>
+	
+</mapper>

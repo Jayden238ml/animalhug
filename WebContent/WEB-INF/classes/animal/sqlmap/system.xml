@@ -1,0 +1,502 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper      
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"      
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="System">
+
+	<select id="getuserMemCnt" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT
+			COUNT(*) AS TOTAL_CNT
+		FROM COM_USER_MEMBER
+		WHERE 1 = 1
+		<if test="SCH_RET_YN != '' and SCH_RET_YN != null">
+			AND RET_YN = #{SCH_RET_YN}
+		</if>
+	</select>
+	
+	<select id="getuserMemList" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT 
+			TB.*
+		FROM(
+			SELECT
+				T.*
+				, CAST(CEILING((RNUM)/#{PAGE_SIZE}) AS CHAR)  AS PAGE
+				, CAST(#{TOTAL_CNT} - RNUM +1 AS CHAR) AS RNUMUM
+			FROM(
+				SELECT
+					  MEM_SEQ
+					, MEMBER_ID
+					, MEMBER_NICK
+					, MEMBER_NM
+					, MEMBER_EMAIL
+					, RET_YN
+					, DATE_FORMAT(RET_DATE, '%Y-%m-%d')AS RET_DATE 
+					, DATE_FORMAT(REGDATE, '%Y-%m-%d')AS REGDATE 
+					, @RNUM := @RNUM + 1  AS RNUM
+				FROM COM_USER_MEMBER ,(SELECT @RNUM := 0 ) STR	
+				WHERE 1 = 1
+				<if test="SCH_RET_YN != '' and SCH_RET_YN != null">
+					AND RET_YN = #{SCH_RET_YN}
+				</if>
+				ORDER BY DATE_FORMAT(REGDATE, '%Y-%m-%d %H:%i:%s') DESC
+			)T
+		)TB
+		WHERE PAGE = #{CURR_PAGE}
+	</select>
+	
+	
+	
+	<select id="getNoticeCnt" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT
+			COUNT(*) AS TOTAL_CNT
+		FROM COM_NOTICE_BOARD
+		WHERE 1 = 1
+	</select>
+	
+	<select id="getNoticeList" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT
+			TB.*
+		FROM(
+			SELECT
+				T.*
+				, CEILING((RNUM)/#{PAGE_SIZE})  AS PAGE
+				, CAST(#{TOTAL_CNT} - RNUM +1 AS CHAR) AS RNUMUM
+			FROM(
+				SELECT
+					  NOTICE_SEQ 		
+				    , BOARD_TYPE 
+				    , CASE WHEN BOARD_TYPE = '1' THEN '자유게시판' ELSE '찾아주세요' END AS BOARD_TYPE_NM		
+				    , TITLE 			
+				    , CONTENT  			
+				    , OPEN_YN 
+				    , CASE WHEN OPEN_YN = 'Y' THEN '게시' ELSE '미게시' END AS OPEN_YN_NM			
+				    , VIEW_CNT 			
+				    , REG_NICK 			
+				    , DATE_FORMAT(REGDATE, '%Y-%m-%d')AS REGDATE 			
+					, @RNUM := @RNUM + 1  AS RNUM
+				FROM COM_NOTICE_BOARD ,(SELECT @RNUM := 0 ) STR	
+				WHERE 1 = 1
+			)T
+		)TB
+		WHERE PAGE = #{CURR_PAGE}
+	</select>
+	
+	<insert id="noticeData_inserte">
+		INSERT INTO COM_NOTICE_BOARD (
+			  BOARD_TYPE 		
+		    , TITLE 			
+		    , CONTENT  			
+		    , OPEN_YN 			
+		    , VIEW_CNT 			
+		    , REG_NICK
+		    , REGID
+		    , REGDATE
+		    , UPDDATE
+		)VALUES(
+			  #{BOARD_TYPE} 		
+		    , #{TITLE} 			
+		    , #{CONTENTS}  			
+		    , #{OPEN_YN} 			
+		    , 0			
+		    , #{SESSION_USR_NICK}
+		    , #{SESSION_USR_ID}
+		    , NOW()
+		    , NOW()
+		)
+	</insert>
+	
+	<insert id="FindAnimal_Insert">
+		INSERT INTO FIND_ANIMAL_INFO(
+			  BGNDE		
+			, ENDDE		
+			, UPKIND		
+			, KIND		
+			, UPR_CD		
+			, ORG_CD		
+			, CARE_REG_NO	
+			, STATE		
+			, NEUTER_YN	
+			, DESERTIONNO	
+			, FILENAME	
+			, HAPPENDT	
+			, HAPPENPLACE	
+			, KINDCD		
+			, COLORCD	
+			, AGE		
+			, WEIGHT		
+			, NOTICENO	
+			, NOTICESDT	
+			, NOTICEEDT	
+			, POPFILE	
+			, PROCESSSTATE	
+			, SEXCD		
+			, NEUTERYN	
+			, SPECIALMARK	
+			, CARENM		
+			, CARETEL	
+			, CAREADDR	
+			, ORGNM		
+			, CHARGENM	
+			, OFFICETEL	
+			, NOTICECOMMENT
+		)VALUES(
+			  #{BGNDE}		
+			, #{ENDDE}		
+			, #{UPKIND}		
+			, #{KIND}		
+			, #{UPR_CD}		
+			, #{ORG_CD}		
+			, #{CARE_REG_NO}	
+			, #{STATE}		
+			, #{NEUTER_YN}	
+			, #{DESERTIONNO}	
+			, #{FILENAME}	
+			, #{HAPPENDT}	
+			, #{HAPPENPLACE}	
+			, #{KINDCD}		
+			, #{COLORCD}	
+			, #{AGE}		
+			, #{WEIGHT}		
+			, #{NOTICENO}	
+			, #{NOTICESDT}	
+			, #{NOTICEEDT}	
+			, #{POPFILE}	
+			, #{PROCESSSTATE}	
+			, #{SEXCD}		
+			, #{NEUTERYN}	
+			, #{SPECIALMARK}	
+			, #{CARENM}		
+			, #{CARETEL}	
+			, #{CAREADDR}	
+			, #{ORGNM}		
+			, #{CHARGENM}	
+			, #{OFFICETEL}	
+			, #{NOTICECOMMENT}
+		)
+	</insert>
+	
+	<insert id="adoptAnimal_Insert">
+		INSERT INTO ADOPT_ANIMAL_INFO(
+			  BGNDE		
+			, ENDDE		
+			, UPKIND		
+			, KIND		
+			, UPR_CD		
+			, ORG_CD		
+			, CARE_REG_NO	
+			, STATE		
+			, NEUTER_YN	
+			, DESERTIONNO	
+			, FILENAME	
+			, HAPPENDT	
+			, HAPPENPLACE	
+			, KINDCD		
+			, COLORCD	
+			, AGE		
+			, WEIGHT		
+			, NOTICENO	
+			, NOTICESDT	
+			, NOTICEEDT	
+			, POPFILE	
+			, PROCESSSTATE	
+			, SEXCD		
+			, NEUTERYN	
+			, SPECIALMARK	
+			, CARENM		
+			, CARETEL	
+			, CAREADDR	
+			, ORGNM		
+			, CHARGENM	
+			, OFFICETEL	
+			, NOTICECOMMENT
+		)VALUES(
+			  #{BGNDE}		
+			, #{ENDDE}		
+			, #{UPKIND}		
+			, #{KIND}		
+			, #{UPR_CD}		
+			, #{ORG_CD}		
+			, #{CARE_REG_NO}	
+			, #{STATE}		
+			, #{NEUTER_YN}	
+			, #{DESERTIONNO}	
+			, #{FILENAME}	
+			, #{HAPPENDT}	
+			, #{HAPPENPLACE}	
+			, #{KINDCD}		
+			, #{COLORCD}	
+			, #{AGE}		
+			, #{WEIGHT}		
+			, #{NOTICENO}	
+			, #{NOTICESDT}	
+			, #{NOTICEEDT}	
+			, #{POPFILE}	
+			, #{PROCESSSTATE}	
+			, #{SEXCD}		
+			, #{NEUTERYN}	
+			, #{SPECIALMARK}	
+			, #{CARENM}		
+			, #{CARETEL}	
+			, #{CAREADDR}	
+			, #{ORGNM}		
+			, #{CHARGENM}	
+			, #{OFFICETEL}	
+			, #{NOTICECOMMENT}
+		)
+	</insert>
+	
+	<delete id="FindAnimal_Delete">
+		DELETE FROM FIND_ANIMAL_INFO
+		WHERE UPKIND = #{UPKIND}
+	</delete>
+	
+	
+	<delete id="adoptAnimal_Delete">
+		DELETE FROM ADOPT_ANIMAL_INFO
+		WHERE UPKIND = #{UPKIND}
+	</delete>
+	
+	
+	<select id="getIllumiWarrCnt" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT
+			COUNT(*) AS TOTAL_CNT
+		FROM TB_WARRANT_INFO
+		WHERE 1 = 1
+		<if test="SCH_DANZI != null and SCH_DANZI != ''">
+			AND DANZI = #{SCH_DANZI}
+		</if>
+		<if test="SCH_DONG != null and SCH_DONG != ''">
+			AND DONG = #{SCH_DONG}
+		</if>
+		<if test="SCH_LEVEL != null and SCH_LEVEL != ''">
+			AND WARRANT_YN = #{SCH_LEVEL}
+		</if>
+		<if test="SCH_AMT_YN != null and SCH_AMT_YN != ''">
+			AND AMT_YN = #{SCH_AMT_YN}
+		</if>
+		<if test="SCH_WORD != '' and SCH_WORD != null">
+			AND(
+					USER_NM LIKE CONCAT('%', #{SCH_WORD},'%')
+					OR
+					USER_NM2 LIKE CONCAT('%', #{SCH_WORD},'%')
+					OR
+					NICK LIKE CONCAT('%', #{SCH_WORD},'%')
+					OR
+					HOSU LIKE CONCAT('%', #{SCH_WORD},'%')
+				)
+		</if>
+	</select>
+	
+	
+	<select id="getIllumiWarrList" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT
+			TB.*
+		FROM(
+			SELECT
+				  T.*
+				, CEILING((RNUM)/#{PAGE_SIZE})  AS PAGE
+				, CAST(#{TOTAL_CNT} - RNUM +1 AS CHAR) AS RNUMUM
+			FROM(
+				SELECT
+					  WARRANT_SEQ	
+					, DANZI		
+					, DONG		
+					, HOSU		
+					, USER_NM	
+					, NICK		
+					, HP		
+					, WARRANT_YN	
+					, CASE WHEN WARRANT_YN = 'Y' THEN '제출완료' ELSE '미제출' END AS WARRANT_YN_NM
+					, AMT_YN
+					, CASE WHEN AMT_YN = 'Y' THEN '납부완료' ELSE '미납'	END AS AMT_YN_NM	
+					, ADDR		
+					, JOHAP_YN	
+					, CASE WHEN JOHAP_YN = 'Y' THEN '조합' WHEN JOHAP_YN = 'I' THEN '임대' ELSE '일반분양자' END AS JOHAP_YN_NM
+					, ETC		
+					, DATE_FORMAT(REGDATE, '%Y-%m-%d %H:%i')AS REGDATE 	
+					, HP2		
+					, USER_NM2		
+					, (SELECT GRADE FROM CAFE_MEMBER_INFO WHERE A.DONG = DONG AND A.HOSU = HOSU LIMIT 1)AS GRADE
+					, @RNUM := @RNUM + 1  AS RNUM
+				FROM TB_WARRANT_INFO A ,(SELECT @RNUM := 0 ) STR	
+				WHERE 1 = 1
+				<if test="SCH_DANZI != null and SCH_DANZI != ''">
+					AND DANZI = #{SCH_DANZI}
+				</if>
+				<if test="SCH_DONG != null and SCH_DONG != ''">
+					AND DONG = #{SCH_DONG}
+				</if>
+				<if test="SCH_LEVEL != null and SCH_LEVEL != ''">
+					AND WARRANT_YN = #{SCH_LEVEL}
+				</if>
+				<if test="SCH_AMT_YN != null and SCH_AMT_YN != ''">
+					AND AMT_YN = #{SCH_AMT_YN}
+				</if>
+				<if test="SCH_WORD != '' and SCH_WORD != null">
+					AND(
+							USER_NM LIKE CONCAT('%', #{SCH_WORD},'%')
+							OR
+							USER_NM2 LIKE CONCAT('%', #{SCH_WORD},'%')
+							OR
+							NICK LIKE CONCAT('%', #{SCH_WORD},'%')
+							OR
+							HOSU LIKE CONCAT('%', #{SCH_WORD},'%')
+						)
+				</if>
+				ORDER BY DANZI, CAST(DONG AS UNSIGNED),CAST(HOSU AS UNSIGNED)
+			)T
+		)TB
+		WHERE PAGE = #{CURR_PAGE}
+		ORDER BY DANZI, CAST(DONG AS UNSIGNED),CAST(HOSU AS UNSIGNED)
+	</select>
+	
+	<select id="getIllumiWarrExcelList" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT
+			  WARRANT_SEQ	
+			, CONCAT(DANZI, '단지') AS DANZI
+			, CONCAT(DONG, '동') AS DONG
+			, CONCAT(HOSU, '호') AS HOSU
+			, USER_NM	
+			, NICK		
+			, HP		
+			, WARRANT_YN	
+			, CASE WHEN WARRANT_YN = 'Y' THEN '제출완료' ELSE '미제출' END AS WARRANT_YN_NM
+			, AMT_YN
+			, CASE WHEN AMT_YN = 'Y' THEN '납부완료' ELSE '미납'	END AS AMT_YN_NM	
+			, ADDR		
+			, JOHAP_YN	
+			, CASE WHEN JOHAP_YN = 'Y' THEN '조합' WHEN JOHAP_YN = 'I' THEN '임대' ELSE '일반분양자' END AS JOHAP_YN_NM
+			, ETC		
+			, DATE_FORMAT(REGDATE, '%Y-%m-%d %H:%i')AS REGDATE 	
+			, HP2		
+			, USER_NM2
+		FROM TB_WARRANT_INFO
+		WHERE 1 = 1
+		<if test="SCH_DANZI != null and SCH_DANZI != ''">
+			AND DANZI = #{SCH_DANZI}
+		</if>
+		<if test="SCH_DONG != null and SCH_DONG != ''">
+			AND DONG = #{SCH_DONG}
+		</if>
+		<if test="SCH_LEVEL != null and SCH_LEVEL != ''">
+			AND WARRANT_YN = #{SCH_LEVEL}
+		</if>
+		<if test="SCH_WORD != '' and SCH_WORD != null">
+			AND(
+					USER_NM LIKE CONCAT('%', #{SCH_WORD},'%')
+					OR
+					USER_NM2 LIKE CONCAT('%', #{SCH_WORD},'%')
+					OR
+					NICK LIKE CONCAT('%', #{SCH_WORD},'%')
+					OR
+					HOSU LIKE CONCAT('%', #{SCH_WORD},'%')
+				)
+		</if>
+		ORDER BY DANZI, CAST(DONG AS UNSIGNED),CAST(HOSU AS UNSIGNED)
+	</select>
+	
+	<select id="getWarrDataDetail" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT
+			  WARRANT_SEQ	
+			, DANZI		
+			, DONG		
+			, HOSU		
+			, USER_NM	
+			, NICK		
+			, HP		
+			, WARRANT_YN	
+			, CASE WHEN WARRANT_YN = 'Y' THEN '제출완료' ELSE '미제출' END AS WARRANT_YN_NM
+			, AMT_YN
+			, CASE WHEN AMT_YN = 'Y' THEN '납부완료' ELSE '미납'	END AS AMT_YN_NM	
+			, ADDR		
+			, JOHAP_YN	
+			, CASE WHEN JOHAP_YN = 'Y' THEN '조합' WHEN JOHAP_YN = 'I' THEN '임대' ELSE '일반분양자' END AS JOHAP_YN_NM
+			, ETC		
+			, DATE_FORMAT(REGDATE, '%Y-%m-%d %H:%i')AS REGDATE 	
+			, HP2		
+			, USER_NM2
+		FROM TB_WARRANT_INFO
+		WHERE WARRANT_SEQ = #{WARRANT_SEQ}
+
+	</select>
+	
+	<insert id="InsertWarrDataHist">
+		INSERT INTO TB_WARRANT_INFO_HIST(
+			  DANZI
+			, DONG
+			, HOSU
+			, USER_NM
+			, NICK
+			, HP
+			, WARRANT_YN
+			, AMT_YN
+			, ADDR
+			, JOHAP_YN
+			, ETC
+			, REGDATE
+			, HP2
+			, USER_NM2
+		)
+		SELECT
+			  DANZI
+			, DONG
+			, HOSU
+			, USER_NM
+			, NICK
+			, HP
+			, WARRANT_YN
+			, AMT_YN
+			, ADDR
+			, JOHAP_YN
+			, ETC
+			, NOW()
+			, HP2
+			, USER_NM2
+		FROM TB_WARRANT_INFO
+		WHERE WARRANT_SEQ = #{WARRANT_SEQ}
+	</insert>
+	
+	<update id="UpdateWarrData">
+		UPDATE TB_WARRANT_INFO SET
+			  USER_NM = #{USER_NM}
+			, USER_NM2 = #{USER_NM2}
+			, NICK = #{NICK}
+			, HP = #{HP}
+			, HP2 = #{HP2}
+			, ADDR = #{ADDR}
+			, WARRANT_YN = #{WARRANT_YN}
+			, AMT_YN = #{AMT_YN}
+			, ETC = #{ETC}
+			, UPDDATE = NOW()
+		WHERE WARRANT_SEQ = #{WARRANT_SEQ}
+	</update>
+	
+	<select id="LmsExcelDown" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT
+			HP
+	      , USER_NM
+	      , MAIL
+		FROM(
+			SELECT 
+				REPLACE(HP, '-', '')AS HP
+				, USER_NM
+				, '' AS MAIL
+			FROM TB_WARRANT_INFO
+			WHERE WARRANT_YN = 'Y'
+			AND HP != ''
+			UNION ALL
+			SELECT 
+				REPLACE(HP2, '-', '')AS HP
+				, USER_NM2
+				, '' AS MAIL
+			FROM TB_WARRANT_INFO
+			WHERE WARRANT_YN = 'Y'
+			AND HP2 != ''
+		)T
+		WHERE LENGTH(HP) = 11 
+		GROUP BY HP, USER_NM, MAIL
+		ORDER BY  USER_NM IS NULL ASC, USER_NM
+	</select>
+	
+</mapper>

@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper      
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"      
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="MenuSession">
+ 	<!--탑메뉴 가져오기 -->
+	<select id="getMenuAdnTop"  parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT 
+			M.MENU_CODE,
+			M.MENUNM,
+			M.USER_DVID,
+			M.MENU_URL,
+			M.IMG1_URL,
+			M.W_SIZE
+		FROM COM_MENU M 
+		WHERE M.DLTE_YN = 'N' 
+			AND M.USE_YN = 'Y'
+			AND M.PRTCODE ='ROOT' 
+			AND M.USER_DVID = 'ADMIN'
+		ORDER BY M.EXPS_ORDR
+	</select>
+
+	<!--레프트 메뉴목록 -->
+ 	<select id="getMenuAdnLeft"  parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		WITH MENU AS
+		       (SELECT TBLA.MENU_CODE,
+		              REPLICATE('',(TBLA.MENU_LEVL-1)*2 - 1) + TBLA.MENUNM AS MENUNM,
+		              TBLA.EXPS_ORDR,
+		              TBLA.USE_YN,
+		              TBLA.DLTE_YN,
+		              TBLA.MENU_URL,
+		              TBLA.USER_DVID,
+		              TBLA.MENU_LEVL,
+		              TBLA.MENU_EXPL,
+		              TBLA.IMG2_URL,
+		              TBLA.IMG1_URL,
+		              TBLA.TARGET_LOCT,
+		              TBLA.PRTCODE,
+		              TBLA.TITLE_IMG_URL,
+		              CONVERT(VARCHAR(255),'0') AS SORT
+		              ,CASE WHEN TBLA.MENU_LEVL = '1' THEN TBLA.MENU_CODE
+						WHEN TBLA.MENU_LEVL = '2' THEN (SELECT MENU_CODE FROM COM_MENU WHERE USER_DVID = 'ADMIN' AND MENU_CODE = TBLA.PRTCODE AND PRTCODE = 'ROOT')
+						WHEN TBLA.MENU_LEVL = '3' THEN (SELECT PRTCODE FROM COM_MENU WHERE MENU_CODE = (
+														SELECT PRTCODE FROM COM_MENU WHERE MENU_CODE = TBLA.MENU_CODE	)
+														AND USER_DVID = 'ADMIN')
+						END TOP_MENU_CODE
+		         FROM COM_MENU TBLA
+				 WHERE TBLA.PRTCODE = ''
+			UNION ALL
+		       SELECT TBLB.MENU_CODE,
+		              CASE
+		                  WHEN TBLB.MENU_LEVL = 1
+		                  THEN REPLICATE('',(TBLB.MENU_LEVL-1)*2) + TBLB.MENUNM
+		                  ELSE REPLICATE('',(TBLB.MENU_LEVL-1)*2 - 1) + ' ' + TBLB.MENUNM
+		              END AS MENUNM,
+		              TBLB.EXPS_ORDR,
+		              TBLB.USE_YN,
+		              TBLB.DLTE_YN,
+		              TBLB.MENU_URL,
+		              TBLB.USER_DVID,
+		              TBLB.MENU_LEVL,
+		              TBLB.MENU_EXPL,
+		              TBLB.IMG2_URL,
+		              TBLB.IMG1_URL,
+		              TBLB.TARGET_LOCT,
+		              TBLB.PRTCODE,
+		              TBLB.TITLE_IMG_URL,
+		              CONVERT(VARCHAR(255), RTRIM(TBLC.SORT) + '/' + REPLACE(STR(TBLB.EXPS_ORDR,3),' ','0')) AS SORT
+		              ,CASE WHEN TBLB.MENU_LEVL = '1' THEN TBLB.MENU_CODE
+						WHEN TBLB.MENU_LEVL = '2' THEN (SELECT MENU_CODE FROM COM_MENU WHERE USER_DVID = 'ADMIN' AND MENU_CODE = TBLB.PRTCODE AND PRTCODE = 'ROOT')
+						WHEN TBLB.MENU_LEVL = '3' THEN (SELECT PRTCODE FROM COM_MENU WHERE MENU_CODE = (
+														SELECT PRTCODE FROM COM_MENU WHERE MENU_CODE = TBLB.MENU_CODE	)
+														AND USER_DVID = 'ADMIN')
+					END TOP_MENU_CODE
+		         FROM COM_MENU TBLB
+		          JOIN MENU TBLC
+		              ON TBLB.PRTCODE = TBLC.MENU_CODE		
+		       )
+		SELECT MM.*
+		  FROM MENU MM RIGHT OUTER JOIN 
+		  (SELECT MENU_CODE FROM COM_MENU_AUTH CA WHERE CA.AUTH_CODE IN
+		  	<foreach collection="SESSION_AUTH_CD"  item="item"   open="(" close=")" separator=",">
+					#{item}
+			</foreach>
+			GROUP BY MENU_CODE)T ON MM.MENU_CODE = T.MENU_CODE 
+		 WHERE MM.DLTE_YN='N' AND MM.USE_YN = 'Y'
+		       AND MM.MENU_CODE !='ROOT'
+		       		AND MM.USER_DVID = 'ADMIN'
+		ORDER BY MM.SORT
+		OPTION (MAXRECURSION 5)
+		
+ 	</select>	
+ 	
+ 	<!-- 유저 탑메뉴 가져오기 -->
+	<select id="getMenuUserTop"  parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT 
+		      M.MENU_CODE,
+		      M.MENUNM,
+		      M.USER_DVID,
+		      M.MENU_URL,
+		      M.IMG1_URL,
+		      M.W_SIZE,
+		      M.MENU_EXPL
+		FROM COM_MENU M 
+		WHERE M.DLTE_YN = 'N' 
+		AND M.USE_YN = 'Y'
+		AND M.PRTCODE ='ROOT' 
+		AND M.USER_DVID = 'FRONT'
+		ORDER BY M.EXPS_ORDR 
+	</select>
+	
+	<!--유저 레프트 메뉴목록 -->
+ 	<select id="getMenuUserLeft"  parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		WITH MENU AS
+		       (SELECT TBLA.MENU_CODE,
+		              REPLICATE('',(TBLA.MENU_LEVL-1)*2 - 1) + TBLA.MENUNM AS MENUNM,
+		              TBLA.EXPS_ORDR,
+		              TBLA.USE_YN,
+		              TBLA.DLTE_YN,
+		              TBLA.MENU_URL,
+		              TBLA.USER_DVID,
+		              TBLA.MENU_LEVL,
+		              TBLA.MENU_EXPL,
+		              TBLA.IMG2_URL,
+		              TBLA.IMG1_URL,
+		              TBLA.TARGET_LOCT,
+		              TBLA.PRTCODE,
+		              TBLA.TITLE_IMG_URL,
+		              CONVERT(VARCHAR(255),'0') AS SORT
+		              ,CASE WHEN TBLA.MENU_LEVL = '1' THEN TBLA.MENU_CODE
+						WHEN TBLA.MENU_LEVL = '2' THEN (SELECT MENU_CODE FROM COM_MENU WHERE USER_DVID = 'FRONT' AND MENU_CODE = TBLA.PRTCODE AND PRTCODE = 'ROOT')
+						WHEN TBLA.MENU_LEVL = '3' THEN (SELECT PRTCODE FROM COM_MENU WHERE MENU_CODE = (
+														SELECT PRTCODE FROM COM_MENU WHERE MENU_CODE = TBLA.MENU_CODE	)
+														AND USER_DVID = 'FRONT')
+						END TOP_MENU_CODE
+		         FROM COM_MENU TBLA
+				 WHERE TBLA.PRTCODE = ''
+			UNION ALL
+		       SELECT TBLB.MENU_CODE,
+		              CASE
+		                  WHEN TBLB.MENU_LEVL = 1
+		                  THEN REPLICATE('',(TBLB.MENU_LEVL-1)*2) + TBLB.MENUNM
+		                  ELSE REPLICATE('',(TBLB.MENU_LEVL-1)*2 - 1) + ' ' + TBLB.MENUNM
+		              END AS MENUNM,
+		              TBLB.EXPS_ORDR,
+		              TBLB.USE_YN,
+		              TBLB.DLTE_YN,
+		              TBLB.MENU_URL,
+		              TBLB.USER_DVID,
+		              TBLB.MENU_LEVL,
+		              TBLB.MENU_EXPL,
+		              TBLB.IMG2_URL,
+		              TBLB.IMG1_URL,
+		              TBLB.TARGET_LOCT,
+		              TBLB.PRTCODE,
+		              TBLB.TITLE_IMG_URL,
+		              CONVERT(VARCHAR(255), RTRIM(TBLC.SORT) + '/' + REPLACE(STR(TBLB.EXPS_ORDR,3),' ','0')) AS SORT
+		              ,CASE WHEN TBLB.MENU_LEVL = '1' THEN TBLB.MENU_CODE
+						WHEN TBLB.MENU_LEVL = '2' THEN (SELECT MENU_CODE FROM COM_MENU WHERE USER_DVID = 'FRONT' AND MENU_CODE = TBLB.PRTCODE AND PRTCODE = 'ROOT')
+						WHEN TBLB.MENU_LEVL = '3' THEN (SELECT PRTCODE FROM COM_MENU WHERE MENU_CODE = (
+														SELECT PRTCODE FROM COM_MENU WHERE MENU_CODE = TBLB.MENU_CODE	)
+														AND USER_DVID = 'FRONT')
+					END TOP_MENU_CODE
+		         FROM COM_MENU TBLB
+		          JOIN MENU TBLC
+		              ON TBLB.PRTCODE = TBLC.MENU_CODE		
+		       )
+		SELECT MM.*
+		  FROM MENU MM RIGHT OUTER JOIN 
+		  (SELECT MENU_CODE FROM COM_MENU_AUTH CA WHERE CA.AUTH_CODE IN
+		  	<foreach collection="SESSION_AUTH_CD"  item="item"   open="(" close=")" separator=",">
+					#{item}
+			</foreach>
+			GROUP BY MENU_CODE)T ON MM.MENU_CODE = T.MENU_CODE 
+		 WHERE MM.DLTE_YN='N' AND MM.USE_YN = 'Y'
+		       AND MM.MENU_CODE !='ROOT'
+		       		AND MM.USER_DVID = 'FRONT'
+		ORDER BY MM.SORT
+		OPTION (MAXRECURSION 5)
+		
+ 	</select>	
+ 	
+ 	<!--첫 레프트 메뉴 -->
+ 	<select id="getMenuAdnLeftView"  parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT TOP 1 MENU_CODE
+						,	MENUNM
+						,	MENU_URL
+						,	MENU_LEVL
+						,	PRTCODE
+						,	WORK_MENU_CODE
+						,	TOP_MENU_CODE
+						,	(SELECT MENU_URL FROM COM_MENU WHERE MENU_CODE = A.WORK_MENU_CODE) WORK_MENU_CODE_URL
+						, 	(SELECT MAX(MENU_CODE) FROM COM_MENU WHERE MENU_URL = A.MENU_URL) AS CURRENT_MENU_CODE
+					 FROM (
+			SELECT A.MENU_CODE		
+				,A.MENUNM  
+				,A.MENU_URL		
+				,A.MENU_LEVL 					
+				,A.PRTCODE         
+				,A.WORK_MENU_CODE
+				,CASE WHEN A.MENU_LEVL = '1' THEN A.MENU_CODE
+						WHEN A.MENU_LEVL = '2' THEN (SELECT MENU_CODE FROM COM_MENU WHERE USER_DVID = 'ADMIN' AND MENU_CODE = A.PRTCODE AND PRTCODE = 'ROOT')
+						WHEN A.MENU_LEVL = '3' THEN (SELECT PRTCODE FROM COM_MENU WHERE MENU_CODE = (
+														SELECT PRTCODE FROM COM_MENU WHERE MENU_CODE = A.MENU_CODE	)
+														AND USER_DVID = 'ADMIN')
+					END TOP_MENU_CODE
+			FROM COM_MENU A RIGHT OUTER JOIN
+			(SELECT MENU_CODE FROM COM_MENU_AUTH CA WHERE CA.AUTH_CODE IN
+		  	<foreach collection="SESSION_AUTH_CD"  item="item"   open="(" close=")" separator=",">
+					#{item}
+			</foreach>
+			GROUP BY MENU_CODE)T ON A.MENU_CODE = T.MENU_CODE 
+			WHERE DLTE_YN='N'
+			AND A.USE_YN = 'Y'
+			AND A.USER_DVID = 'ADMIN'
+			)A
+			<if test="MENU_URL != ''">
+				WHERE MENU_URL = #{MENU_URL}					
+			</if>
+			<if test="TOP_MENU_CODE != ''">
+				<![CDATA[
+				WHERE MENU_URL IS NOT NULL AND MENU_URL <> ''
+				]]>
+				AND	TOP_MENU_CODE = #{TOP_MENU_CODE}					
+			</if>
+			ORDER BY MENU_CODE	
+		
+ 	</select>
+ 	
+ 	<!--첫 레프트 메뉴 -->
+ 	<select id="getMenuUserLeftView"  parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT TOP 1 MENU_CODE
+						,	MENUNM
+						,	MENU_URL
+						,	MENU_LEVL
+						,	PRTCODE
+						,	WORK_MENU_CODE
+						,	TOP_MENU_CODE
+						,	(SELECT MENU_URL FROM COM_MENU WHERE MENU_CODE = A.WORK_MENU_CODE) WORK_MENU_CODE_URL
+						, 	(SELECT MAX(MENU_CODE) FROM COM_MENU WHERE MENU_URL = A.MENU_URL) AS CURRENT_MENU_CODE
+					 FROM (
+			SELECT A.MENU_CODE		
+				,A.MENUNM  
+				,A.MENU_URL		
+				,A.MENU_LEVL 					
+				,A.PRTCODE         
+				,A.WORK_MENU_CODE
+				,CASE WHEN A.MENU_LEVL = '1' THEN A.MENU_CODE
+						WHEN A.MENU_LEVL = '2' THEN (SELECT MENU_CODE FROM COM_MENU WHERE USER_DVID = 'FRONT' AND MENU_CODE = A.PRTCODE AND PRTCODE = 'ROOT')
+						WHEN A.MENU_LEVL = '3' THEN (SELECT PRTCODE FROM COM_MENU WHERE MENU_CODE = (
+														SELECT PRTCODE FROM COM_MENU WHERE MENU_CODE = A.MENU_CODE	)
+														AND USER_DVID = 'FRONT')
+					END TOP_MENU_CODE
+			FROM COM_MENU A RIGHT OUTER JOIN 
+			(SELECT MENU_CODE FROM COM_MENU_AUTH CA WHERE CA.AUTH_CODE IN
+		  	<foreach collection="SESSION_AUTH_CD"  item="item"   open="(" close=")" separator=",">
+					#{item}
+			</foreach>
+			GROUP BY MENU_CODE)T ON A.MENU_CODE = T.MENU_CODE 
+			WHERE DLTE_YN='N'
+			AND A.USE_YN = 'Y'
+			AND A.USER_DVID = 'FRONT'
+			)A
+			<if test="MENU_URL != ''">
+				WHERE MENU_URL = #{MENU_URL}					
+			</if>
+			<if test="TOP_MENU_CODE != ''">
+			<![CDATA[
+				WHERE MENU_URL IS NOT NULL AND MENU_URL <> ''
+				]]>
+				AND	TOP_MENU_CODE = #{TOP_MENU_CODE}					
+			</if>
+			ORDER BY MENU_CODE	
+		
+ 	</select>	
+ 	
+ 	<!--권한체크 -->
+ 	<select id="getMenucheck"  parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT TOP 1 MENU_CODE
+						,	MENUNM
+						,	MENU_URL
+						,	MENU_LEVL
+						,	PRTCODE
+						,	WORK_MENU_CODE
+						,	TOP_MENU_CODE
+						,	(SELECT MENU_URL FROM COM_MENU WHERE MENU_CODE = A.WORK_MENU_CODE) WORK_MENU_CODE_URL
+						, 	(SELECT MAX(MENU_CODE) FROM COM_MENU WHERE MENU_URL = A.MENU_URL) AS CURRENT_MENU_CODE
+					 FROM (
+			SELECT A.MENU_CODE		
+				,A.MENUNM  
+				,A.MENU_URL		
+				,A.MENU_LEVL 					
+				,A.PRTCODE         
+				,A.WORK_MENU_CODE
+				,CASE WHEN A.MENU_LEVL = '1' THEN A.MENU_CODE
+						WHEN A.MENU_LEVL = '2' THEN (SELECT MENU_CODE FROM COM_MENU WHERE USER_DVID = 'FRONT' AND MENU_CODE = A.PRTCODE AND PRTCODE = 'ROOT')
+						WHEN A.MENU_LEVL = '3' THEN (SELECT PRTCODE FROM COM_MENU WHERE MENU_CODE = (
+														SELECT PRTCODE FROM COM_MENU WHERE MENU_CODE = A.MENU_CODE	)
+														AND USER_DVID = 'FRONT')
+					END TOP_MENU_CODE
+			FROM COM_MENU A RIGHT OUTER JOIN 
+			(SELECT MENU_CODE FROM COM_MENU_AUTH CA WHERE CA.AUTH_CODE IN
+		  	<foreach collection="SESSION_AUTH_CD"  item="item"   open="(" close=")" separator=",">
+					#{item}
+			</foreach>
+			GROUP BY MENU_CODE)T ON A.MENU_CODE = T.MENU_CODE 
+			WHERE DLTE_YN='N'
+			AND A.USE_YN = 'Y'
+			)A
+			<if test="MENU_URL != ''">
+			WHERE MENU_URL = #{MENU_URL}					
+			</if>
+			<if test="MENU_CODE != ''">
+			WHERE MENU_CODE = #{MENU_CODE}					
+			</if>
+ 	</select>			
+</mapper>

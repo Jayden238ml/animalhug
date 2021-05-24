@@ -1,0 +1,706 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper      
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"      
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Board">
+	
+	<insert id="boardDataInsert">
+		INSERT INTO COM_FREE_BOARD(
+			  TITLE
+			, CONTENT
+			, DEL_YN
+			, VIEW_CNT    
+			, ATTACH_YN   
+			, IP       
+			, DEVICE_TYPE 
+			, REG_NICK 
+			, REGID    
+			, REGDATE     
+			, UPDDATE
+		)VALUES(
+			  #{TITLE}
+			, #{CONTENTS}
+			, 'N'
+			, 0   
+			, #{ATTACH_YN}   
+			, #{IP}       
+			, #{DEVICE_TYPE} 
+			, #{SESSION_USR_NICK} 
+			, #{SESSION_USR_ID}    
+			, NOW()    
+			, NOW()
+		)
+	</insert>
+	
+	<update id="boardDataUpdate">
+		UPDATE COM_FREE_BOARD SET
+			  TITLE = #{TITLE}
+			, CONTENT = #{CONTENTS}
+			, UPDDATE = NOW()
+		WHERE 1 = 1
+		AND BOARD_SEQ = #{BOARD_SEQ}
+	</update>
+	
+	<select id="getFreeBoardCnt" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT
+			COUNT(*) AS TOTAL_CNT
+		FROM COM_FREE_BOARD
+		WHERE 1 = 1
+		AND DEL_YN = 'N'
+		<if test="SCH_WORD != '' and SCH_WORD != null">
+			<choose>
+				<when test="SCH_TYPE == '01'.toString()">
+					AND TITLE LIKE CONCAT('%', #{SCH_WORD},'%')
+				</when>
+				<when test="SCH_TYPE == '02'.toString()">
+					AND CONTENT LIKE CONCAT('%', #{SCH_WORD},'%')
+				</when>
+				<when test="SCH_TYPE == '03'.toString()">
+					AND REG_NICK LIKE CONCAT('%', #{SCH_WORD},'%')
+				</when>
+				<otherwise>
+					AND(
+						TITLE LIKE CONCAT('%', #{SCH_WORD},'%')
+						OR
+						CONTENT LIKE CONCAT('%', #{SCH_WORD},'%')
+						OR
+						REG_NICK LIKE CONCAT('%', #{SCH_WORD},'%')
+						)
+				</otherwise>
+			</choose>
+		</if>
+	</select>
+	
+	
+	<select id="getFreeBoardList" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT
+			TB.*
+		FROM(
+			SELECT
+				  T.*
+				, CEILING((RNUM)/#{PAGE_SIZE})  AS PAGE
+				, CAST(#{TOTAL_CNT} - RNUM +1 AS CHAR) AS RNUMUM
+			FROM(
+				SELECT
+					  A.BOARD_SEQ
+					, A.TITLE
+					, A.CONTENT
+					, A.DEL_YN
+					, A.VIEW_CNT    
+					, A.ATTACH_YN   
+					, A.IP       
+					, A.DEVICE_TYPE 
+					, A.REG_NICK 
+					, A.REGID    
+					, DATE_FORMAT(A.REGDATE, '%Y-%m-%d %H:%m')AS REGDATE 
+					, A.UPDDATE
+					, (SELECT COUNT(*) FROM COM_FREE_BOARD_RIP WHERE BOARD_SEQ = A.BOARD_SEQ AND DEL_YN = 'N')AS R_CNT
+					,  CASE WHEN TIMESTAMPDIFF(HOUR, DATE_FORMAT(A.REGDATE, '%Y-%m-%d %H:%m'), DATE_FORMAT(now(), '%Y-%m-%d %H:%m')) <![CDATA[ < ]]> 5 THEN 'N' ELSE 'O' END AS  NEW_IMG
+					, @RNUM := @RNUM + 1  AS RNUM
+				FROM COM_FREE_BOARD A ,(SELECT @RNUM := 0 ) STR	
+				WHERE 1 = 1
+				AND A.DEL_YN = 'N'
+				<if test="SCH_WORD != '' and SCH_WORD != null">
+					<choose>
+						<when test="SCH_TYPE == '01'.toString()">
+							AND TITLE LIKE CONCAT('%', #{SCH_WORD},'%')
+						</when>
+						<when test="SCH_TYPE == '02'.toString()">
+							AND CONTENT LIKE CONCAT('%', #{SCH_WORD},'%')
+						</when>
+						<when test="SCH_TYPE == '03'.toString()">
+							AND REG_NICK LIKE CONCAT('%', #{SCH_WORD},'%')
+						</when>
+						<otherwise>
+							AND(
+								TITLE LIKE CONCAT('%', #{SCH_WORD},'%')
+								OR
+								CONTENT LIKE CONCAT('%', #{SCH_WORD},'%')
+								OR
+								REG_NICK LIKE CONCAT('%', #{SCH_WORD},'%')
+								)
+						</otherwise>
+					</choose>
+				</if>
+				ORDER BY DATE_FORMAT(A.REGDATE, '%Y-%m-%d %H:%i:%s') DESC
+			)T
+		)TB
+		WHERE PAGE = #{CURR_PAGE}
+	</select>
+	
+	<select id="getBoardDataDetail" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT
+			  BOARD_SEQ
+			, TITLE
+			, CONTENT
+			, DEL_YN
+			, VIEW_CNT    
+			, ATTACH_YN   
+			, IP       
+			, DEVICE_TYPE 
+			, REG_NICK 
+			, REGID    
+			, DATE_FORMAT(REGDATE, '%Y-%m-%d %H:%i')AS REGDATE 
+			, UPDDATE
+		FROM COM_FREE_BOARD
+		WHERE 1 = 1
+		AND BOARD_SEQ = #{BOARD_SEQ}
+	</select>
+	
+	<update id="boardDataViewCntUpdate">
+		UPDATE COM_FREE_BOARD SET
+			VIEW_CNT = IFNULL(VIEW_CNT,0) + 1
+		WHERE 1 = 1
+		AND BOARD_SEQ = #{BOARD_SEQ} 
+	</update>
+	
+	
+	<update id="boardDataDelete">
+		UPDATE COM_FREE_BOARD SET
+			  DEL_YN = 'Y'
+			, UPDDATE = NOW()
+		WHERE 1 = 1
+		AND BOARD_SEQ = #{BOARD_SEQ} 
+	</update>
+	
+	<insert id="boardRipDataInsert">
+		<selectKey resultType="int" keyProperty="RIP_SEQ" order="AFTER">
+		   SELECT LAST_INSERT_ID() RIP_SEQ
+		</selectKey>
+	
+		INSERT INTO COM_FREE_BOARD_RIP(
+			  BOARD_SEQ 
+		    , RIP_RIP_SEQ	
+		    , SORT 
+		    , RIP_COMMENT 
+		    , DEL_YN 
+		    , DEVICE_TYPE 
+		    , IP 
+		    , REG_NICK 
+		    , REGID 
+		    , REGDATE 
+		    , UPDDATE 
+		)VALUES(
+			  #{BOARD_SEQ} 
+		    , #{RIP_RIP_SEQ}
+		    , #{SORT}
+		    , #{RIP_COMMENT} 
+		    , 'N'
+			, #{DEVICE_TYPE} 
+		    , #{IP}       
+			, #{SESSION_USR_NICK}
+		    , #{SESSION_USR_ID} 
+		    , NOW()
+		    , NOW()
+		)
+	</insert>
+	
+	<update id="boardRipDataUpdateSeq">
+		UPDATE COM_FREE_BOARD_RIP SET
+			RIP_RIP_SEQ = #{RIP_RIP_SEQ}
+		WHERE 1 = 1
+		AND RIP_SEQ = #{RIP_SEQ}
+	</update>
+	
+	<select id="getBoardRipList" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT
+			  RIP_SEQ
+			, BOARD_SEQ
+			, RIP_RIP_SEQ
+			, RIP_COMMENT
+			, REG_NICK
+			, SORT
+			, CASE WHEN SORT != 1 THEN 'Y' ELSE 'N' END REP_YN
+			, DATE_FORMAT(REGDATE, '%Y-%m-%d %H:%i')AS REGDATE 
+			, REGID
+		FROM COM_FREE_BOARD_RIP
+		WHERE 1 = 1
+		AND BOARD_SEQ = #{BOARD_SEQ}
+		AND DEL_YN = 'N'
+		ORDER BY RIP_RIP_SEQ, SORT
+	</select>
+	
+	<delete id="boardRipDataDelete">
+		UPDATE COM_FREE_BOARD_RIP SET
+			  DEL_YN = 'Y'
+			, UPDDATE = NOW()
+		WHERE 1 = 1
+		AND BOARD_SEQ = #{BOARD_SEQ} 
+		AND RIP_RIP_SEQ = #{RIP_RIP_SEQ}
+		AND SORT = #{SORT}
+	</delete>
+	
+	
+	<select id="getFindBoardCnt" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT
+			COUNT(*) AS TOTAL_CNT
+		FROM COM_FIND_BOARD
+		WHERE 1 = 1
+		AND DEL_YN = 'N'
+		<if test="SCH_WORD != '' and SCH_WORD != null">
+			<choose>
+				<when test="SCH_TYPE == '01'.toString()">
+					AND TITLE LIKE CONCAT('%', #{SCH_WORD},'%')
+				</when>
+				<when test="SCH_TYPE == '02'.toString()">
+					AND CONTENT LIKE CONCAT('%', #{SCH_WORD},'%')
+				</when>
+				<when test="SCH_TYPE == '03'.toString()">
+					AND REG_NICK LIKE CONCAT('%', #{SCH_WORD},'%')
+				</when>
+				<otherwise>
+					AND(
+						TITLE LIKE CONCAT('%', #{SCH_WORD},'%')
+						OR
+						CONTENT LIKE CONCAT('%', #{SCH_WORD},'%')
+						OR
+						REG_NICK LIKE CONCAT('%', #{SCH_WORD},'%')
+						)
+				</otherwise>
+			</choose>
+		</if>
+	</select>
+	
+	
+	<select id="getFindBoardList" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT
+			TB.*
+		FROM(
+			SELECT
+				  T.*
+				, CEILING((RNUM)/#{PAGE_SIZE})  AS PAGE
+				, CAST(#{TOTAL_CNT} - RNUM +1 AS CHAR) AS RNUMUM
+			FROM(
+				SELECT
+					  A.FIND_SEQ
+					, A.TITLE
+					, A.CONTENT
+					, A.DEL_YN
+					, A.VIEW_CNT    
+					, A.ATTACH_YN   
+					, A.IP       
+					, A.DEVICE_TYPE 
+					, A.REG_NICK 
+					, A.REGID    
+					, DATE_FORMAT(A.REGDATE, '%Y-%m-%d %H:%m')AS REGDATE 
+					, A.UPDDATE
+					, (SELECT COUNT(*) FROM COM_FIND_BOARD_RIP WHERE FIND_SEQ = A.FIND_SEQ AND DEL_YN = 'N')AS R_CNT
+					,  CASE WHEN TIMESTAMPDIFF(HOUR, DATE_FORMAT(A.REGDATE, '%Y-%m-%d %H:%m'), DATE_FORMAT(now(), '%Y-%m-%d %H:%m')) <![CDATA[ < ]]> 5 THEN 'N' ELSE 'O' END AS  NEW_IMG
+					, @RNUM := @RNUM + 1  AS RNUM
+				FROM COM_FIND_BOARD A ,(SELECT @RNUM := 0 ) STR	
+				WHERE 1 = 1
+				AND A.DEL_YN = 'N'
+				<if test="SCH_WORD != '' and SCH_WORD != null">
+					<choose>
+						<when test="SCH_TYPE == '01'.toString()">
+							AND TITLE LIKE CONCAT('%', #{SCH_WORD},'%')
+						</when>
+						<when test="SCH_TYPE == '02'.toString()">
+							AND CONTENT LIKE CONCAT('%', #{SCH_WORD},'%')
+						</when>
+						<when test="SCH_TYPE == '03'.toString()">
+							AND REG_NICK LIKE CONCAT('%', #{SCH_WORD},'%')
+						</when>
+						<otherwise>
+							AND(
+								TITLE LIKE CONCAT('%', #{SCH_WORD},'%')
+								OR
+								CONTENT LIKE CONCAT('%', #{SCH_WORD},'%')
+								OR
+								REG_NICK LIKE CONCAT('%', #{SCH_WORD},'%')
+								)
+						</otherwise>
+					</choose>
+				</if>
+				ORDER BY DATE_FORMAT(A.REGDATE, '%Y-%m-%d %H:%i:%s') DESC
+			)T
+		)TB
+		WHERE PAGE = #{CURR_PAGE}
+	</select>
+	
+	
+	<select id="getFindBoardDataDetail" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT
+			  FIND_SEQ
+			, TITLE
+			, CONTENT
+			, DEL_YN
+			, VIEW_CNT    
+			, ATTACH_YN   
+			, IP       
+			, DEVICE_TYPE 
+			, REG_NICK 
+			, REGID    
+			, DATE_FORMAT(REGDATE, '%Y-%m-%d %H:%i')AS REGDATE 
+			, UPDDATE
+		FROM COM_FIND_BOARD
+		WHERE 1 = 1
+		AND FIND_SEQ = #{FIND_SEQ}
+	</select>
+	
+	
+	
+	<insert id="findBoardDataInsert">
+		INSERT INTO COM_FIND_BOARD(
+			  TITLE
+			, CONTENT
+			, DEL_YN
+			, VIEW_CNT    
+			, ATTACH_YN   
+			, IP       
+			, DEVICE_TYPE 
+			, REG_NICK 
+			, REGID    
+			, REGDATE     
+			, UPDDATE
+		)VALUES(
+			  #{TITLE}
+			, #{CONTENTS}
+			, 'N'
+			, 0   
+			, #{ATTACH_YN}   
+			, #{IP}       
+			, #{DEVICE_TYPE} 
+			, #{SESSION_USR_NICK} 
+			, #{SESSION_USR_ID}    
+			, NOW()    
+			, NOW()
+		)
+	</insert>
+	
+	<update id="findBoardDataUpdate">
+		UPDATE COM_FIND_BOARD SET
+			  TITLE = #{TITLE}
+			, CONTENT = #{CONTENTS}
+			, UPDDATE = NOW()
+		WHERE 1 = 1
+		AND FIND_SEQ = #{FIND_SEQ}
+	</update>
+	
+	
+	<update id="findBoardDataViewCntUpdate">
+		UPDATE COM_FIND_BOARD SET
+			VIEW_CNT = IFNULL(VIEW_CNT,0) + 1
+		WHERE 1 = 1
+		AND FIND_SEQ = #{FIND_SEQ}
+	</update>
+	
+	
+	<select id="getFindBoardRipList" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT
+			  RIP_SEQ
+			, FIND_SEQ
+			, RIP_RIP_SEQ
+			, RIP_COMMENT
+			, REG_NICK
+			, SORT
+			, CASE WHEN SORT != 1 THEN 'Y' ELSE 'N' END REP_YN
+			, DATE_FORMAT(REGDATE, '%Y-%m-%d %H:%i')AS REGDATE 
+			, REGID
+		FROM COM_FIND_BOARD_RIP
+		WHERE 1 = 1
+		AND FIND_SEQ = #{FIND_SEQ}
+		AND DEL_YN = 'N'
+		ORDER BY RIP_RIP_SEQ, SORT
+	</select>
+	
+	
+	<insert id="findBoardRipDataInsert">
+		<selectKey resultType="int" keyProperty="RIP_SEQ" order="AFTER">
+		   SELECT LAST_INSERT_ID() RIP_SEQ
+		</selectKey>
+	
+		INSERT INTO COM_FIND_BOARD_RIP(
+			  FIND_SEQ 
+		    , RIP_RIP_SEQ	
+		    , SORT 
+		    , RIP_COMMENT 
+		    , DEL_YN 
+		    , DEVICE_TYPE 
+		    , IP 
+		    , REG_NICK 
+		    , REGID 
+		    , REGDATE 
+		    , UPDDATE 
+		)VALUES(
+			  #{FIND_SEQ} 
+		    , #{RIP_RIP_SEQ}
+		    , #{SORT}
+		    , #{RIP_COMMENT} 
+		    , 'N'
+			, #{DEVICE_TYPE} 
+		    , #{IP}       
+			, #{SESSION_USR_NICK}
+		    , #{SESSION_USR_ID} 
+		    , NOW()
+		    , NOW()
+		)
+	</insert>
+	
+	
+	<update id="findBoardRipDataUpdateSeq">
+		UPDATE COM_FIND_BOARD_RIP SET
+			RIP_RIP_SEQ = #{RIP_RIP_SEQ}
+		WHERE 1 = 1
+		AND RIP_SEQ = #{RIP_SEQ}
+	</update>
+	
+	
+	<delete id="fiindBoardRipDataDelete">
+		UPDATE COM_FIND_BOARD_RIP SET
+			  DEL_YN = 'Y'
+			, UPDDATE = NOW()
+		WHERE 1 = 1
+		AND FIND_SEQ = #{FIND_SEQ} 
+		AND RIP_RIP_SEQ = #{RIP_RIP_SEQ}
+		AND SORT = #{SORT}
+	</delete>
+	
+	
+	<update id="findBoardDataDelete">
+		UPDATE COM_FIND_BOARD SET
+			  DEL_YN = 'Y'
+			, UPDDATE = NOW()
+		WHERE 1 = 1
+		AND FIND_SEQ = #{FIND_SEQ} 
+	</update>
+	
+	
+	
+	<select id="getQnaBoardCnt" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT
+			COUNT(*) AS TOTAL_CNT
+		FROM COM_QNA_BOARD
+		WHERE 1 = 1
+		AND DEL_YN = 'N'
+		<if test="SCH_WORD != '' and SCH_WORD != null">
+			<choose>
+				<when test="SCH_TYPE == '01'.toString()">
+					AND TITLE LIKE CONCAT('%', #{SCH_WORD},'%')
+				</when>
+				<when test="SCH_TYPE == '02'.toString()">
+					AND CONTENT LIKE CONCAT('%', #{SCH_WORD},'%')
+				</when>
+				<when test="SCH_TYPE == '03'.toString()">
+					AND REG_NICK LIKE CONCAT('%', #{SCH_WORD},'%')
+				</when>
+				<otherwise>
+					AND(
+						TITLE LIKE CONCAT('%', #{SCH_WORD},'%')
+						OR
+						CONTENT LIKE CONCAT('%', #{SCH_WORD},'%')
+						OR
+						REG_NICK LIKE CONCAT('%', #{SCH_WORD},'%')
+						)
+				</otherwise>
+			</choose>
+		</if>
+	</select>
+	
+	
+	<select id="getQnaBoardList" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT
+			TB.*
+		FROM(
+			SELECT
+				  T.*
+				, CEILING((RNUM)/#{PAGE_SIZE})  AS PAGE
+				, CAST(#{TOTAL_CNT} - RNUM +1 AS CHAR) AS RNUMUM
+			FROM(
+				SELECT
+					  A.QNA_SEQ
+					, A.TITLE
+					, A.CONTENT
+					, A.DEL_YN
+					, A.VIEW_CNT    
+					, A.ATTACH_YN   
+					, A.IP       
+					, A.DEVICE_TYPE 
+					, A.REG_NICK 
+					, A.REGID    
+					, DATE_FORMAT(A.REGDATE, '%Y-%m-%d %H:%m')AS REGDATE 
+					, A.UPDDATE
+					, (SELECT COUNT(*) FROM COM_QNA_BOARD_RIP WHERE QNA_SEQ = A.QNA_SEQ AND DEL_YN = 'N')AS R_CNT
+					,  CASE WHEN TIMESTAMPDIFF(HOUR, DATE_FORMAT(A.REGDATE, '%Y-%m-%d %H:%m'), DATE_FORMAT(now(), '%Y-%m-%d %H:%m')) <![CDATA[ < ]]> 5 THEN 'N' ELSE 'O' END AS  NEW_IMG
+					, @RNUM := @RNUM + 1  AS RNUM
+				FROM COM_QNA_BOARD A ,(SELECT @RNUM := 0 ) STR	
+				WHERE 1 = 1
+				AND A.DEL_YN = 'N'
+				<if test="SCH_WORD != '' and SCH_WORD != null">
+					<choose>
+						<when test="SCH_TYPE == '01'.toString()">
+							AND TITLE LIKE CONCAT('%', #{SCH_WORD},'%')
+						</when>
+						<when test="SCH_TYPE == '02'.toString()">
+							AND CONTENT LIKE CONCAT('%', #{SCH_WORD},'%')
+						</when>
+						<when test="SCH_TYPE == '03'.toString()">
+							AND REG_NICK LIKE CONCAT('%', #{SCH_WORD},'%')
+						</when>
+						<otherwise>
+							AND(
+								TITLE LIKE CONCAT('%', #{SCH_WORD},'%')
+								OR
+								CONTENT LIKE CONCAT('%', #{SCH_WORD},'%')
+								OR
+								REG_NICK LIKE CONCAT('%', #{SCH_WORD},'%')
+								)
+						</otherwise>
+					</choose>
+				</if>
+				ORDER BY DATE_FORMAT(A.REGDATE, '%Y-%m-%d %H:%i:%s') DESC
+			)T
+		)TB
+		WHERE PAGE = #{CURR_PAGE}
+	</select>
+	
+	
+	<select id="getqnaBoardDataDetail" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT
+			  QNA_SEQ
+			, TITLE
+			, CONTENT
+			, DEL_YN
+			, VIEW_CNT    
+			, ATTACH_YN   
+			, IP       
+			, DEVICE_TYPE 
+			, REG_NICK 
+			, REGID    
+			, DATE_FORMAT(REGDATE, '%Y-%m-%d %H:%i')AS REGDATE 
+			, UPDDATE
+		FROM COM_QNA_BOARD
+		WHERE 1 = 1
+		AND QNA_SEQ = #{QNA_SEQ}
+	</select>
+	
+	
+	<insert id="qnaBoardDataInsert">
+		INSERT INTO COM_QNA_BOARD(
+			  TITLE
+			, CONTENT
+			, DEL_YN
+			, VIEW_CNT    
+			, ATTACH_YN   
+			, IP       
+			, DEVICE_TYPE 
+			, REG_NICK 
+			, REGID    
+			, REGDATE     
+			, UPDDATE
+		)VALUES(
+			  #{TITLE}
+			, #{CONTENTS}
+			, 'N'
+			, 0   
+			, #{ATTACH_YN}   
+			, #{IP}       
+			, #{DEVICE_TYPE} 
+			, #{SESSION_USR_NICK} 
+			, #{SESSION_USR_ID}    
+			, NOW()    
+			, NOW()
+		)
+	</insert>
+	
+	
+	<update id="qnaBoardDataUpdate">
+		UPDATE COM_QNA_BOARD SET
+			  TITLE = #{TITLE}
+			, CONTENT = #{CONTENTS}
+			, UPDDATE = NOW()
+		WHERE 1 = 1
+		AND QNA_SEQ = #{QNA_SEQ}
+	</update>
+	
+	
+	<update id="qnaBoardDataViewCntUpdate">
+		UPDATE COM_QNA_BOARD SET
+			VIEW_CNT = IFNULL(VIEW_CNT,0) + 1
+		WHERE 1 = 1
+		AND QNA_SEQ = #{QNA_SEQ} 
+	</update>
+	
+	
+	<select id="getQnaBoardRipList" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT
+			  RIP_SEQ
+			, QNA_SEQ
+			, RIP_RIP_SEQ
+			, RIP_COMMENT
+			, REG_NICK
+			, SORT
+			, CASE WHEN SORT != 1 THEN 'Y' ELSE 'N' END REP_YN
+			, DATE_FORMAT(REGDATE, '%Y-%m-%d %H:%i')AS REGDATE 
+			, REGID
+		FROM COM_QNA_BOARD_RIP
+		WHERE 1 = 1
+		AND QNA_SEQ = #{QNA_SEQ}
+		AND DEL_YN = 'N'
+		ORDER BY RIP_RIP_SEQ, SORT
+	</select>
+	
+	
+	<insert id="boardQnaRipDataInsert">
+		<selectKey resultType="int" keyProperty="RIP_SEQ" order="AFTER">
+		   SELECT LAST_INSERT_ID() RIP_SEQ
+		</selectKey>
+	
+		INSERT INTO COM_QNA_BOARD_RIP(
+			  QNA_SEQ 
+		    , RIP_RIP_SEQ	
+		    , SORT 
+		    , RIP_COMMENT 
+		    , DEL_YN 
+		    , DEVICE_TYPE 
+		    , IP 
+		    , REG_NICK 
+		    , REGID 
+		    , REGDATE 
+		    , UPDDATE 
+		)VALUES(
+			  #{QNA_SEQ} 
+		    , #{RIP_RIP_SEQ}
+		    , #{SORT}
+		    , #{RIP_COMMENT} 
+		    , 'N'
+			, #{DEVICE_TYPE} 
+		    , #{IP}       
+			, #{SESSION_USR_NICK}
+		    , #{SESSION_USR_ID} 
+		    , NOW()
+		    , NOW()
+		)
+	</insert>
+	
+	
+	
+	<update id="boardQnaRipDataUpdateSeq">
+		UPDATE COM_QNA_BOARD_RIP SET
+			RIP_RIP_SEQ = #{RIP_RIP_SEQ}
+		WHERE 1 = 1
+		AND RIP_SEQ = #{RIP_SEQ}
+	</update>
+	
+	
+	<update id="qnaBoardDataDelete">
+		UPDATE COM_QNA_BOARD SET
+			  DEL_YN = 'Y'
+			, UPDDATE = NOW()
+		WHERE 1 = 1
+		AND QNA_SEQ = #{QNA_SEQ} 
+	</update>
+	
+	
+	<delete id="qnaBoardRipDataDelete">
+		UPDATE COM_QNA_BOARD_RIP SET
+			  DEL_YN = 'Y'
+			, UPDDATE = NOW()
+		WHERE 1 = 1
+		AND QNA_SEQ = #{QNA_SEQ} 
+		AND RIP_RIP_SEQ = #{RIP_RIP_SEQ}
+		AND SORT = #{SORT}
+	</delete>
+	
+</mapper>

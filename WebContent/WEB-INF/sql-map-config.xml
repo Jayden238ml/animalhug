@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD SQL Map Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<settings>
+		<setting value="true" name="callSettersOnNulls" />
+	</settings>
+
+	<typeHandlers>
+		<typeHandler javaType="String" jdbcType="CLOB"
+			handler="org.apache.ibatis.type.ClobTypeHandler" />
+	</typeHandlers>
+	
+	<plugins>
+	   <plugin interceptor="animal.framework.common.QueryInterceptor" />
+	</plugins>
+	
+
+	<mappers>
+		<mapper resource="animal/sqlmap/board.xml" />
+		<mapper resource="animal/sqlmap/common.xml" />
+		<mapper resource="animal/sqlmap/menu.xml" />
+		<mapper resource="animal/sqlmap/menuSession.xml" />
+		<mapper resource="animal/sqlmap/system.xml" />
+		<mapper resource="animal/sqlmap/member.xml" />
+		<mapper resource="animal/sqlmap/illumi.xml" />
+		
+	</mappers>
+</configuration>

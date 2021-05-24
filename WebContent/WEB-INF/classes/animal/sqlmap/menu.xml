@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper      
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"      
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="menu">
+
+	<select id="getMenu_List" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		WITH MENU AS
+		       (SELECT TBLA.MENU_CODE,
+		              REPLICATE('',(TBLA.MENU_LEVL-1)*2 - 1) + TBLA.MENUNM AS MENUNM,
+		              TBLA.EXPS_ORDR,
+		              TBLA.USE_YN,
+		              TBLA.DLTE_YN,
+		              TBLA.MENU_URL,
+		              TBLA.USER_DVID,
+		              TBLA.MENU_LEVL,
+		              TBLA.MENU_EXPL,
+		              TBLA.IMG2_URL,
+		              TBLA.IMG1_URL,
+		              TBLA.TARGET_LOCT,
+		              TBLA.PRTCODE,
+		              TBLA.TITLE_IMG_URL,
+		              CONVERT(VARCHAR(255),'0') AS SORT,
+		              CASE WHEN TBLA.MENU_LEVL = '1' THEN MENUNM 
+			            WHEN TBLA.MENU_LEVL = '2' THEN ((SELECT MENUNM FROM COM_MENU WHERE MENU_CODE = TBLA.PRTCODE)+' - '+TBLA.MENUNM)
+						WHEN TBLA.MENU_LEVL = '3' THEN (SELECT MENUNM FROM COM_MENU WHERE MENU_CODE = (SELECT PRTCODE FROM COM_MENU WHERE MENU_CODE = TBLA.PRTCODE))+' - '+(SELECT MENUNM FROM COM_MENU WHERE MENU_CODE = TBLA.PRTCODE)+' - '+TBLA.MENUNM
+			            END MENU_NAVI
+		         FROM COM_MENU TBLA
+				 WHERE TBLA.PRTCODE = ''
+			UNION ALL
+		       SELECT TBLB.MENU_CODE,
+		              CASE
+		                  WHEN TBLB.MENU_LEVL = 1
+		                  THEN REPLICATE('',(TBLB.MENU_LEVL-1)*2) + TBLB.MENUNM
+		                  ELSE REPLICATE('',(TBLB.MENU_LEVL-1)*2 - 1) + ' ' + TBLB.MENUNM
+		              END AS MENUNM,
+		              TBLB.EXPS_ORDR,
+		              TBLB.USE_YN,
+		              TBLB.DLTE_YN,
+		              TBLB.MENU_URL,
+		              TBLB.USER_DVID,
+		              TBLB.MENU_LEVL,
+		              TBLB.MENU_EXPL,
+		              TBLB.IMG2_URL,
+		              TBLB.IMG1_URL,
+		              TBLB.TARGET_LOCT,
+		              TBLB.PRTCODE,
+		              TBLB.TITLE_IMG_URL,
+		              CONVERT(VARCHAR(255), RTRIM(TBLC.SORT) + '/' + REPLACE(STR(TBLB.EXPS_ORDR,3),' ','0')) AS SORT,
+		              CASE WHEN TBLB.MENU_LEVL = '1' THEN TBLB.MENUNM 
+			            WHEN TBLB.MENU_LEVL = '2' THEN ((SELECT MENUNM FROM COM_MENU WHERE MENU_CODE = TBLB.PRTCODE)+' - '+TBLB.MENUNM)
+						WHEN TBLB.MENU_LEVL = '3' THEN (SELECT MENUNM FROM COM_MENU WHERE MENU_CODE = (SELECT PRTCODE FROM COM_MENU WHERE MENU_CODE = TBLB.PRTCODE))+' - '+(SELECT MENUNM FROM COM_MENU WHERE MENU_CODE = TBLB.PRTCODE)+' - '+TBLB.MENUNM
+			            END MENU_NAVI
+		         FROM COM_MENU TBLB
+		          JOIN MENU TBLC
+		              ON TBLB.PRTCODE = TBLC.MENU_CODE		
+		       )
+		SELECT *
+		  FROM MENU
+		 WHERE DLTE_YN='N'
+		       AND MENU_CODE !='ROOT'
+		       <if test='USER_DVID != "" and USER_DVID != null'>
+		       		AND USER_DVID = #{USER_DVID}
+		       </if>
+		ORDER BY SORT
+		OPTION (MAXRECURSION 5)
+	</select>
+	
+	<update id="menu_Delete" parameterType="java.util.HashMap">
+		UPDATE COM_MENU SET DLTE_YN = 'Y' WHERE MENU_CODE =  #{MENU_CODE}
+	</update>
+	
+	
+	
+	<update id="menu_Edit" parameterType="java.util.HashMap">
+		UPDATE 
+				COM_MENU				
+		SET	
+				MENUNM 		= #{MENUNM}, 
+				EXPS_ORDR 	= #{EXPS_ORDR}, 
+				USE_YN 		= #{USE_YN}, 
+				MENU_URL 	= #{MENU_URL}, 
+				UPDID 		= #{SESSION_USR_ID},
+				UPDDATE 	= GETDATE(), 
+				MENU_LEVL	= #{MENU_LEVL}, 
+				USER_DVID 	= #{USER_DVID}, 
+				MENU_EXPL 	= #{MENU_EXPL},
+				<if test='IMG2_URL != "" and IMG2_URL != null'> 
+				IMG2_URL 	= #{IMG2_URL}, 
+				</if>
+				<if test='IMG1_URL != "" and IMG1_URL != null'>
+				IMG1_URL 	= #{IMG1_URL}, 
+				</if>
+				TARGET_LOCT = #{TARGET_LOCT} ,
+				TITLE_IMG_URL = #{TITLE_IMG_URL}
+		WHERE 	MENU_CODE =  #{CURR_MENU_CODE}
+	</update>
+	
+	<select id="setMenu_Code" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT ISNULL('MENU' + REPLACE(STR(MAX(SUBSTRING(MENU_CODE, 5,8)) + 1 ,4),' ','0'),'MENU0001') MENU_CODE FROM COM_MENU
+	</select>
+	
+	<insert id="menu_Insert"  parameterType="java.util.HashMap">
+		INSERT INTO COM_MENU 
+	       ( 
+	           MENU_CODE, 
+	           MENUNM, 
+	           EXPS_ORDR, 
+	           USE_YN, 
+	           DLTE_YN, 
+	           MENU_URL, 
+	           USER_DVID, 
+	           MENU_LEVL, 
+	           MENU_EXPL, 
+	           IMG2_URL, 
+	           IMG1_URL, 
+	           TARGET_LOCT, 
+	           PRTCODE , 
+	           TITLE_IMG_URL ,
+	           REGID,
+	           REGDATE,
+	           UPDID,
+	           UPDDATE
+	       ) 
+	       VALUES 
+	       ( 
+	           #{MAX_MENU_CODE}, 
+	           #{MENUNM}, 
+	           #{EXPS_ORDR}, 
+	           #{USE_YN}, 
+	           'N', 
+	           #{MENU_URL}, 
+	           #{USER_DVID}, 
+	           #{MENU_LEVL}, 
+	           #{MENU_EXPL}, 
+	           #{IMG2_URL}, 
+	           #{IMG1_URL}, 
+	           #{TARGET_LOCT}, 
+	           #{PRTCODE}, 
+	           #{TITLE_IMG_URL} ,
+	           #{SESSION_USR_ID},
+	           GETDATE(),
+	           #{SESSION_USR_ID},
+	           GETDATE()
+	       )
+	</insert>
+	
+	<!-- 상세조회 -->
+	<select id="getMenu_Detail"    parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT 
+			MENU_CODE	/*메뉴 코드 */,
+			MENUNM		/*메뉴명 */,
+			EXPS_ORDR	/*정렬순서*/,
+			USE_YN		/*사용유무 */,
+			DLTE_YN		/*삭제여부 */,
+			MENU_URL	/*메뉴 URL */,
+			USER_DVID	/*사용자구분 */,				
+			MENU_LEVL 	/*메뉴 레벨 */,
+			USER_DVID	 	/*사용자구분 */,
+			MENU_EXPL 	/*메뉴 설명 */,
+			IMG2_URL	/*이미지2  URL */,
+			IMG1_URL	/*이미지1  URL */,
+			TARGET_LOCT 	/*실행위치  */,
+			PRTCODE,
+			TITLE_IMG_URL
+			
+		FROM COM_MENU
+		WHERE DLTE_YN ='N'
+		<if test='MENU_CODE != "" and MENU_CODE != null'>
+			  AND MENU_CODE = #{MENU_CODE}
+		</if>
+		ORDER BY MENU_LEVL ASC
+	</select>
+	
+	<!-- 해당 메뉴에 속한 그룹 각져오기  -->
+	<select id="menuManagerAuthList" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT 
+				
+			  B.MENU_CODE,
+			  B.MENUNM,
+			  B.USER_DVID,
+			  B.AUTH_CODE,
+			  A.AUTHNM,
+					  A.AUTHCODE AS ROLE_CODE
+		
+		FROM (
+		
+			    SELECT 
+			
+			      M.MENU_CODE,
+			      M.MENUNM,
+			      P.AUTH_CODE,
+			      M.USER_DVID
+			      
+			     FROM COM_MENU M , TB_AUTHGRUP_MAPG P
+			    WHERE M.DLTE_YN = 'N' 
+			    AND  M.MENU_CODE !='ROOT' 
+			    AND M.MENU_CODE = #{MENU_CODE}
+			    AND M.MENU_CODE = P.MENU_CODE
+		
+		) B RIGHT OUTER JOIN TB_AUTHGRUP A ON A.AUTHCODE = B.AUTH_CODE WHERE A.DLTE_YN = 'N'
+	</select>
+	
+	<delete id="menuAuthDelete" parameterType="java.util.HashMap">
+		DELETE FROM TB_AUTHGRUP_MAPG WHERE  MENU_CODE=#{MENU_CODE}
+	</delete>
+	
+	<insert id="menuAuthAdd"  parameterType="java.util.HashMap">
+		INSERT INTO TB_AUTHGRUP_MAPG (
+			MENU_CODE,
+			AUTH_CODE
+		)VALUES(
+			#{MENU_CODE},
+			#{AUTH_CODE}
+		)
+	</insert>
+	
+
+	<select id="selectMenuTopList" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT 
+		      M.MENU_CODE,
+		      M.MENUNM,
+		      M.USER_DVID,
+		      M.MENU_URL,
+		      M.IMG2_URL,
+		      M.IMG1_URL
+		FROM COM_MENU M LEFT JOIN TB_AUTHGRUP_MAPG A
+			ON M.MENU_CODE = A.MENU_CODE
+		WHERE M.DLTE_YN = 'N' 
+		AND  M.PRTCODE ='ROOT' 
+		AND M.USER_DVID = 'FRONT'
+		AND A.AUTH_CODE = #{AUTH_CODE}
+	</select>
+	
+	
+	<select id="selectMenuLeftList" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		WITH MENU AS
+		       (SELECT TBLA.MENU_CODE,
+		              TBLA.MENUNM AS MENUNM,
+		              TBLA.EXPS_ORDR,
+		              TBLA.USE_YN,
+		              TBLA.DLTE_YN,
+		              TBLA.MENU_URL,
+		              TBLA.USER_DVID,
+		              TBLA.MENU_LEVL,
+		              TBLA.MENU_EXPL,
+		              TBLA.IMG2_URL,
+		              TBLA.IMG1_URL,
+		              TBLA.TARGET_LOCT,
+		              TBLA.PRTCODE,
+		              TBLA.TITLE_IMG_URL,
+		              CONVERT(VARCHAR(255),'0') AS SORT
+		         FROM COM_MENU TBLA JOIN TB_AUTHGRUP_MAPG A
+					ON TBLA.MENU_CODE = A.MENU_CODE
+		        WHERE A.AUTH_CODE = #{AUTH_CODE}
+					AND TBLA.PRTCODE = 'ROOT'
+		           UNION ALL
+		       SELECT TBLB.MENU_CODE,
+		              TBLB.MENUNM MENUNM,
+		              TBLB.EXPS_ORDR,
+		              TBLB.USE_YN,
+		              TBLB.DLTE_YN,
+		              TBLB.MENU_URL,
+		              TBLB.USER_DVID,
+		              TBLB.MENU_LEVL,
+		              TBLB.MENU_EXPL,
+		              TBLB.IMG2_URL,
+		              TBLB.IMG1_URL,
+		              TBLB.TARGET_LOCT,
+		              TBLB.PRTCODE,
+		              TBLB.TITLE_IMG_URL,
+		              CONVERT(VARCHAR(255), RTRIM(TBLC.SORT) + '/' + REPLACE(STR(TBLB.EXPS_ORDR,3),' ','0')) AS SORT
+		         FROM COM_MENU TBLB JOIN TB_AUTHGRUP_MAPG A
+					ON TBLB.MENU_CODE = A.MENU_CODE
+		          JOIN MENU TBLC
+		              ON TBLB.PRTCODE = TBLC.MENU_CODE
+				 WHERE A.AUTH_CODE = #{AUTH_CODE}
+		       )
+		SELECT *
+		  FROM MENU
+		 WHERE DLTE_YN='N'
+		       AND USE_YN = 'Y'
+		       AND MENU_CODE !='ROOT'
+		       AND USER_DVID = 'FRONT'
+		ORDER BY SORT
+		OPTION (MAXRECURSION 5)
+	</select>
+	
+	
+	
+	<select id="selectMenuWorkList" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT 
+		      M.MENU_CODE,
+		      M.MENUNM,
+		      M.USER_DVID,
+		      M.MENU_URL,
+		      M.IMG2_URL
+		FROM COM_MENU M LEFT JOIN TB_AUTHGRUP_MAPG A
+			ON M.MENU_CODE = A.MENU_CODE
+		WHERE M.DLTE_YN = 'N' 
+		AND  M.PRTCODE ='ROOT' 
+		AND M.USER_DVID = 'FRONT'
+		AND A.AUTH_CODE = #{AUTH_CODE}
+	</select>
+	
+	<select id="selectRoll" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT
+					    A.AUTHCODE ROLL
+        				
+				FROM  TB_AUTHGRUP_USER B , TB_AUTHGRUP A
+				
+				WHERE  A.DLTE_YN ='N'
+				AND  B.AUTH_CODE = A.AUTHCODE
+				AND B.AUTH_USER_NUM  = #{USRID}
+	
+	</select>
+</mapper>

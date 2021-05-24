@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Member">	
+	
+	<select id="getDupIdCnt" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT
+			COUNT(*) AS ID_DUP_CNT
+		FROM COM_USER_MEMBER
+		WHERE MEMBER_ID = #{MEMBER_ID}
+		AND RET_YN = 'N'
+	</select>
+	
+	<select id="getDupNickCnt" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT
+			COUNT(*) AS NICK_DUP_CNT
+		FROM COM_USER_MEMBER
+		WHERE MEMBER_NICK = #{MEMBER_NICK}
+	</select>
+	
+	<insert id="insertUsermMemberData">
+		<selectKey resultType="int" keyProperty="MEM_SEQ" order="AFTER">
+			SELECT LAST_INSERT_ID() AS MEM_SEQ
+		</selectKey>
+
+		INSERT INTO COM_USER_MEMBER (
+			  MEMBER_ID
+			, MEMBER_PWD
+			, MEMBER_NICK
+			, MEMBER_NM
+			, MEMBER_EMAIL
+			, RET_YN
+			, REGDATE
+			, UPDDATE
+		)VALUES(
+			  #{MEMBER_ID}
+			, MD5(#{MEMBER_PWD})
+			, #{MEMBER_NICK}
+			, #{MEMBER_NM}
+			, #{MEMBER_EMAIL}
+			, 'N'
+			, NOW()
+			, NOW()
+		)
+	</insert>
+	
+	
+	<!-- 사용자 ID 찾기 -->
+	<select id="getFindUserMemberId" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT
+			MEMBER_ID
+		FROM COM_USER_MEMBER
+		WHERE 1 = 1
+		AND MEMBER_NM = #{MEMBER_NM}
+		AND MEMBER_NICK = #{MEMBER_NICK}
+	</select>
+	
+	
+	<!-- 사용자 비밀번호 찾기 -->
+	<select id="getFindUserPWMemberId" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT
+			MEMBER_EMAIL
+		FROM COM_USER_MEMBER
+		WHERE 1 = 1
+		AND MEMBER_ID = #{MEMBER_ID}
+		AND MEMBER_NM = #{MEMBER_NM}
+		AND MEMBER_EMAIL = #{MEMBER_EMAIL}
+	</select>
+	
+	
+	<!-- 사용자 비밀번호 변경 -->
+	<update id="updateUserMemberPwdDataForSendMail">
+		UPDATE COM_USER_MEMBER SET
+			MEMBER_PWD = MD5(#{MEMBER_PWD})
+		WHERE 1 = 1
+		AND MEMBER_ID = #{MEMBER_ID}
+	</update>
+	
+	<!-- 메일발송 이력관리 -->
+	<insert id="sendMail_insert">
+		INSERT INTO COM_SEND_MAIL_HIST(
+			  TO_MAIL_ID
+			, REGDATE
+		)VALUES(
+			  #{TO_MAIL_ID}
+			, NOW()
+		)
+	</insert>
+	
+	
+	<select id="getMemberDetail" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT
+			MEM_SEQ
+			, MEMBER_ID
+			, MEMBER_NICK
+			, MEMBER_NM
+			, MEMBER_EMAIL
+			, DATE_FORMAT(REGDATE, '%Y-%m-%d')AS REGDATE
+		FROM COM_USER_MEMBER
+		WHERE 1 = 1
+		AND MEMBER_ID = #{SESSION_USR_ID}
+	</select>
+	
+	
+	<!-- 사용자 기존 비밀번호 조회 -->
+	<select id="getConfirmPwdCnt" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT
+			COUNT(*) AS CHECK_CNT
+		FROM COM_USER_MEMBER
+		WHERE 1 = 1
+		AND MEMBER_ID = #{SESSION_USR_ID}
+		AND MEMBER_PWD = MD5(#{NOW_MEMBER_PWD})  
+	</select>
+	
+	
+	<!-- 사용자 비밀번호 변경 -->
+	<update id="updateMemberPwdData">
+		UPDATE COM_USER_MEMBER SET
+			MEMBER_PWD = MD5(#{MEMBER_PWD})
+		WHERE 1 = 1
+		AND MEMBER_ID = #{SESSION_USR_ID}
+	</update>
+	
+	
+	<update id="updateMemberOut">
+		UPDATE COM_USER_MEMBER SET
+			  RET_YN = 'Y'
+			, RET_DATE = NOW()
+		WHERE 1 = 1
+		AND MEMBER_ID = #{SESSION_USR_ID}
+	</update>
+	
+	
+	<update id="updateMemberMyInfo">
+		UPDATE COM_USER_MEMBER SET
+			  MEMBER_NICK = #{MEMBER_NICK}
+			, MEMBER_EMAIL = #{MEMBER_EMAIL}
+			, UPDDATE = NOW()
+		WHERE 1 = 1
+		AND MEMBER_ID = #{SESSION_USR_ID}
+	</update>
+	
+</mapper>

@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper      
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"      
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Common">
+	<select id="getuser_Info"  parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT TOP 1 A.*,STUFF((
+		             SELECT ', ' +AUTH_CODE
+		             FROM    COM_AUTH_USER CA
+		             WHERE   A.MEMBER_ID = CA.AUTH_USER
+		             FOR XML PATH('')
+		        ),1,2,'') AS AUTH_CODE
+ 		FROM (
+			SELECT 'P' USERTYPE
+				  ,MEMBER_ID
+				  ,MEMBER_NM
+		    FROM COM_MEMBER A
+		    WHERE MEMBER_ID = #{USER_ID}
+		) A
+	</select>
+	
+	<select id="getAdminuser_IpCheck"  parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT 
+			COUNT(*) AS IP_CNT 
+	    FROM COM_MEMBER A
+	    WHERE MEMBER_ID = #{USER_ID}
+	    AND USERTYPE = #{USERTYPE}
+	    AND DEL_YN = 'N'
+	    AND LOGIN_IP LIKE '%' + #{LOGIN_IP} + '%'
+	</select>
+	
+	<select id="getuser_InfoForLogin"  parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT 
+			  MEM_SEQ	
+			, MEMBER_ID	
+			, MEMBER_PWD	
+			, MEMBER_NICK	
+			, MEMBER_NM	
+			, MEMBER_EMAIL	
+			, RET_YN	
+			, RET_DATE	
+			, REGDATE	
+			, UPDDATE 
+	    FROM COM_USER_MEMBER A
+	    WHERE MEMBER_ID = #{MEMBER_ID}
+	    AND MEMBER_PWD  = MD5(#{MEMBER_PWD}) 
+	    AND RET_YN = 'N'
+	</select>
+	
+	<select id="getOutsiderUser_Cnt" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT
+			COUNT(*) AS CNT
+		FROM COM_MEMBER
+		WHERE MEMBER_ID = #{USER_ID}
+	    AND USERTYPE = #{USERTYPE}
+	    AND DEL_YN = 'N'
+	</select>
+    
+	
+    
+	<!-- 로그인 로그 -->
+	<insert id="insertAccess" parameterType="java.util.HashMap">
+		INSERT INTO COM_LOGIN_HIST (MEMBER_ID, LOGIN_DATE, LOGIN_IP) VALUES (#{MEMBER_ID}, NOW(), #{IP})
+	</insert>
+	
+	<select id="getAdminAll_IpCheck"  parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT COUNT(*) AS IP_CNT 
+	    FROM COM_MEMBER A
+	    WHERE DEL_YN = 'N'
+	    AND LOGIN_IP LIKE '%' + #{LOGIN_IP} + '%'
+	</select>
+	
+	<select id="getAdminAllEng_IpCheck"  parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT COUNT(*) AS IP_CNT 
+	    FROM COM_MEMBER_ENG A
+	    WHERE DEL_YN = 'N'
+	    AND LOGIN_IP LIKE '%' + #{LOGIN_IP} + '%'
+	</select>
+	
+	<select id="getFailCnt"  parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT FAIL_CNT 
+	    FROM COM_MEMBER
+	    WHERE DEL_YN='N'
+		    AND MEMBER_ID= #{USER_ID}
+		    AND USERTYPE= #{USERTYPE}
+	</select>
+	
+	<update id="updateFailCnt" parameterType="java.util.HashMap">
+		UPDATE COM_MEMBER SET
+			FAIL_CNT= ISNULL(FAIL_CNT, 0)+1
+		WHERE DEL_YN='N'
+		    AND MEMBER_ID= #{USER_ID}
+		    AND USERTYPE= #{USERTYPE}
+	</update>
+	
+	<update id="resetFailCnt" parameterType="java.util.HashMap">
+		UPDATE COM_MEMBER SET
+			FAIL_CNT= 0
+		WHERE DEL_YN='N'
+		    AND MEMBER_ID= #{USER_ID}
+		    AND USERTYPE= #{USERTYPE}
+	</update>
+	
+	<select id="SelectAs" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT * FROM COM_CONN_TEMP
+	</select>
+	
+	<select id="getAdopAnimalDataDetail" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT
+		  T.*
+		FROM (
+		  SELECT
+					  DESERTIONNO	
+					, FILENAME	
+					, DATE_FORMAT(HAPPENDT, '%Y-%m-%d')	AS HAPPENDT
+					, HAPPENPLACE	
+					, KINDCD		
+					, COLORCD	
+					, AGE		
+					, WEIGHT		
+					, NOTICENO	
+					, NOTICESDT	
+					, NOTICEEDT	
+					, POPFILE	
+					, PROCESSSTATE	
+					, CASE WHEN SEXCD = 'M' THEN '수컷' WHEN SEXCD = 'F' THEN '암컷' ELSE '미상' END AS 	SEXCD	
+					, CASE WHEN NEUTERYN = 'Y' THEN '예' WHEN NEUTERYN = 'N' THEN '아니오' ELSE '미상' END AS NEUTERYN		
+					, SPECIALMARK	
+					, CARENM		
+					, CARETEL	
+					, CAREADDR	
+					, ORGNM		
+					, CHARGENM	
+					, OFFICETEL	
+					, NOTICECOMMENT
+					, '' AS RTN_URL
+				FROM ADOPT_ANIMAL_INFO
+				WHERE DESERTIONNO = #{DESERTIONNO}
+				UNION ALL
+				SELECT
+					  DESERTIONNO	
+					, FILENAME	
+					, DATE_FORMAT(HAPPENDT, '%Y-%m-%d')	AS HAPPENDT
+					, HAPPENPLACE	
+					, KINDCD		
+					, COLORCD	
+					, AGE		
+					, WEIGHT		
+					, NOTICENO	
+					, NOTICESDT	
+					, NOTICEEDT	
+					, POPFILE	
+					, PROCESSSTATE	
+					, CASE WHEN SEXCD = 'M' THEN '수컷' WHEN SEXCD = 'F' THEN '암컷' ELSE '미상' END AS 	SEXCD	
+					, CASE WHEN NEUTERYN = 'Y' THEN '예' WHEN NEUTERYN = 'N' THEN '아니오' ELSE '미상' END AS NEUTERYN		
+					, SPECIALMARK	
+					, CARENM		
+					, CARETEL	
+					, CAREADDR	
+					, ORGNM		
+					, CHARGENM	
+					, OFFICETEL	
+					, NOTICECOMMENT
+					, '' AS RTN_URL
+				FROM FIND_ANIMAL_INFO
+				WHERE DESERTIONNO = #{DESERTIONNO}
+				UNION ALL
+				SELECT
+					  DESERTIONNO	
+					, FILENAME	
+					, DATE_FORMAT(HAPPENDT, '%Y-%m-%d')	AS HAPPENDT
+					, HAPPENPLACE	
+					, KINDCD		
+					, COLORCD	
+					, AGE		
+					, WEIGHT		
+					, NOTICENO	
+					, NOTICESDT	
+					, NOTICEEDT	
+					, POPFILE	
+					, PROCESSSTATE	
+					, CASE WHEN SEXCD = 'M' THEN '수컷' WHEN SEXCD = 'F' THEN '암컷' ELSE '미상' END AS 	SEXCD	
+					, CASE WHEN NEUTERYN = 'Y' THEN '예' WHEN NEUTERYN = 'N' THEN '아니오' ELSE '미상' END AS NEUTERYN		
+					, SPECIALMARK	
+					, CARENM		
+					, CARETEL	
+					, CAREADDR	
+					, ORGNM		
+					, CHARGENM	
+					, OFFICETEL	
+					, NOTICECOMMENT
+					, RTN_URL
+				FROM COPY_ANIMAL_INFO
+				WHERE DESERTIONNO = #{DESERTIONNO}
+		)T
+		LIMIT 1
+	</select>
+	
+	<select id="getAdoptAnimalCnt" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT
+			COUNT(*)AS TOTAL_CNT
+		FROM ADOPT_ANIMAL_INFO
+	</select>
+	
+	<select id="getAdoptAnimalList" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT
+			TB.*
+		FROM(
+			SELECT
+				T.*
+				, CEILING((RNUM)/#{PAGE_SIZE})  AS PAGE
+				, CAST(#{TOTAL_CNT} - RNUM +1 AS CHAR) AS RNUMUM
+			FROM (
+				SELECT
+					  desertionNo	
+					, popfile	
+					, noticeNo	
+					, kindCd	
+					, colorCd		
+					, sexCd	
+					, happenPlace	
+					, orgNm	
+					, @RNUM := @RNUM + 1  AS RNUM
+				FROM ADOPT_ANIMAL_INFO ,(SELECT @RNUM := 0 ) STR
+			)T	
+		)TB
+		WHERE PAGE = #{CURR_PAGE}
+	</select>
+	
+	
+	<select id="getFindAnimalCnt" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT
+			COUNT(*)AS TOTAL_CNT
+		FROM FIND_ANIMAL_INFO
+	</select>
+	
+	<select id="getFindAnimalList" parameterType="java.util.HashMap" resultType="animal.framework.common.DataMap">
+		SELECT
+			TB.*
+		FROM(
+			SELECT
+				T.*
+				, CEILING((RNUM)/#{PAGE_SIZE})  AS PAGE
+				, CAST(#{TOTAL_CNT} - RNUM +1 AS CHAR) AS RNUMUM
+			FROM (
+				SELECT
+					  desertionNo	
+					, popfile	
+					, noticeNo	
+					, kindCd	
+					, colorCd		
+					, sexCd	
+					, happenPlace		
+					, orgNm		
+					, @RNUM := @RNUM + 1  AS RNUM
+				FROM FIND_ANIMAL_INFO ,(SELECT @RNUM := 0 ) STR
+			)T	
+		)TB
+		WHERE PAGE = #{CURR_PAGE}
+	</select>
+	
+	<delete id="DeleteCopyData">
+		DELETE FROM COPY_ANIMAL_INFO
+		WHERE DESERTIONNO = #{DESERTIONNO}
+	</delete>
+	
+	<insert id="InsertCopyData">
+		INSERT INTO COPY_ANIMAL_INFO(
+			SELECT
+				  BGNDE		
+				, ENDDE		
+				, UPKIND		
+				, KIND		
+				, UPR_CD		
+				, ORG_CD		
+				, CARE_REG_NO	
+				, STATE		
+				, NEUTER_YN	
+				, DESERTIONNO	
+				, FILENAME	
+				, HAPPENDT	
+				, HAPPENPLACE	
+				, KINDCD		
+				, COLORCD	
+				, AGE		
+				, WEIGHT		
+				, NOTICENO	
+				, NOTICESDT	
+				, NOTICEEDT	
+				, POPFILE	
+				, PROCESSSTATE	
+				, SEXCD		
+				, NEUTERYN	
+				, SPECIALMARK	
+				, CARENM		
+				, CARETEL	
+				, CAREADDR	
+				, ORGNM		
+				, CHARGENM	
+				, OFFICETEL	
+				, NOTICECOMMENT
+				, #{RTN_URL}
+			FROM ${TABLE_NM}
+			WHERE DESERTIONNO = #{DESERTIONNO}
+		)
+	</insert>
+	
+	<insert id="IpDataInsert">
+		INSERT INTO IP_INFO(
+			   CONTRY
+			,  IP_ADDR
+			, CONN_DATE
+		)VALUES(
+			  #{CONTRY}
+			, #{IP_ADDR}
+			, NOW()
+		)
+	</insert>
+	
+</mapper>
