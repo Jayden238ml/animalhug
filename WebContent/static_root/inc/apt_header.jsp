@@ -83,68 +83,58 @@
 					$(".sub_depth3 > ul").css("display", "block");
 				}
 		);
+		
+		// 모바일 전체메뉴 //
+		var mobileLnbChk = 0;
+		$('#mobileLnbOpen').click(function(){ 
+			if (mobileLnbChk == 0) {
+				$('#header-mobile .hm-total').animate({ marginRight : '0' }, 350, 'easeOutQuad');
+				//$(this).removeClass('ion-android-menu').addClass('ion-android-close');
+				mobileLnbChk = 1;
+			} else {
+				$('#header-mobile .hm-total').animate({ marginRight : '-100%' }, 350, 'easeOutQuad');
+				//$(this).removeClass('ion-android-close').addClass('ion-android-menu');
+				mobileLnbChk = 0;
+			}
+		});
+		$('#mobileLnbClose').click(function(){ 
+			$('#header-mobile .hm-total').animate({ marginRight : '-100%' }, 350, 'easeOutQuad');
+			//$('.ion-android-close').removeClass('ion-android-close').addClass('ion-android-menu');
+			mobileLnbChk = 0;
+		});	
+		$('#mobileLogin').click(function(){ 
+			$('#header-mobile .hm-total').animate({ marginRight : '-100%' }, 350, 'easeOutQuad');
+			//$('.ion-android-close').removeClass('ion-android-close').addClass('ion-android-menu');
+			mobileLnbChk = 0;
+		});	
+		
+		$('.total-list li.hm-sub>a').on('click', function(){
+			$(this).removeAttr('href');
+			var element = $(this).parent('li');
+			if (element.hasClass('open')) {
+				element.removeClass('open');
+				element.find('li').removeClass('open');
+				element.find('ul').slideUp();
+			}
+			else {
+				element.addClass('open');
+				element.children('ul').slideDown();
+				element.siblings('li').children('ul').slideUp();
+				element.siblings('li').removeClass('open');
+				element.siblings('li').find('li').removeClass('open');
+				element.siblings('li').find('ul').slideUp();
+			}
+		});
+		
+		//팝업창
+		$('#header-mobile > .hm-top > li:nth-child(2)').click(function(){
+			$('.total-bg').show();
+		});
+		$('#header-mobile > .hm-total > ul > li:nth-child(2)').click(function(){
+			$('.total-bg').hide();
+		});	
 	});		
 	
-	 $(document).ready(function() {
-			 // 올마이티컴퍼니 사이트맵
-			$('#SLSiteMapOpen').click(function(){ 
-				$('#sitemapSL').show();
-			});
-			$('#SLSiteMapClose').click(function(){
-				$('#sitemapSL').hide();
-			});
-		 
-			// 모바일 전체메뉴 //
-			var mobileLnbChk = 0;
-			$('#mobileLnbOpen').click(function(){ 
-				if (mobileLnbChk == 0) {
-					$('#header-mobile .hm-total').animate({ marginRight : '0' }, 350, 'easeOutQuad');
-					//$(this).removeClass('ion-android-menu').addClass('ion-android-close');
-					mobileLnbChk = 1;
-				} else {
-					$('#header-mobile .hm-total').animate({ marginRight : '-100%' }, 350, 'easeOutQuad');
-					//$(this).removeClass('ion-android-close').addClass('ion-android-menu');
-					mobileLnbChk = 0;
-				}
-			});
-			$('#mobileLnbClose').click(function(){ 
-				$('#header-mobile .hm-total').animate({ marginRight : '-100%' }, 350, 'easeOutQuad');
-				//$('.ion-android-close').removeClass('ion-android-close').addClass('ion-android-menu');
-				mobileLnbChk = 0;
-			});	
-			$('#mobileLogin').click(function(){ 
-				$('#header-mobile .hm-total').animate({ marginRight : '-100%' }, 350, 'easeOutQuad');
-				//$('.ion-android-close').removeClass('ion-android-close').addClass('ion-android-menu');
-				mobileLnbChk = 0;
-			});	
-			
-			$('.total-list li.hm-sub>a').on('click', function(){
-				$(this).removeAttr('href');
-				var element = $(this).parent('li');
-				if (element.hasClass('open')) {
-					element.removeClass('open');
-					element.find('li').removeClass('open');
-					element.find('ul').slideUp();
-				}
-				else {
-					element.addClass('open');
-					element.children('ul').slideDown();
-					element.siblings('li').children('ul').slideUp();
-					element.siblings('li').removeClass('open');
-					element.siblings('li').find('li').removeClass('open');
-					element.siblings('li').find('ul').slideUp();
-				}
-			});
-			
-			//팝업창
-			$('#header-mobile > .hm-top > li:nth-child(2)').click(function(){
-				$('.total-bg').show();
-			});
-			$('#header-mobile > .hm-total > ul > li:nth-child(2)').click(function(){
-				$('.total-bg').hide();
-			});	
-	
-		});		
 	 
 	 function fnSaMove(){
 		 $.ajax({ 

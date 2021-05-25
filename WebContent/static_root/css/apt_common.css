@@ -1339,3 +1339,8 @@ ul.progTab li.on a {display:block; color:#fff;}
 @media all and (min-width:1200px) {
 
 }
+
+.core_btn {width:100%; text-align:center; overflow:hidden;}
+.core_btn a {display:inline-block; font-size:15px; color:#fff !important; text-align:center; box-sizing:border-box; padding:10px 25px; border-radius:3px; background:#3375ca;}
+.core_btn a:hover {background:#2f6cba;}
+

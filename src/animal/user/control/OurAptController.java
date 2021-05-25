@@ -84,4 +84,28 @@ public class OurAptController extends LincActionController{
 	    }
 	    return new ModelAndView(modelName, "INIT_DATA", dataMap);
 	  }
+	  
+	  @RequestMapping({"/apt/apt_cont.do"})
+	  public ModelAndView apt_cont(@ModelAttribute("requestParam") DataMap dataMap, HttpServletRequest request, HttpServletResponse response)
+	  {
+		  String modelName = "";
+		  try {
+			  modelName = "/ourapt/apt_cont";
+		  } catch (Exception ex) {
+			  ex.printStackTrace();
+		  }
+		  return new ModelAndView(modelName, "INIT_DATA", dataMap);
+	  }
+	  
+	  @RequestMapping({"/apt/apt_req.do"})
+	  public ModelAndView apt_req(@ModelAttribute("requestParam") DataMap dataMap, HttpServletRequest request, HttpServletResponse response)
+	  {
+		  String modelName = "";
+		  try {
+			  modelName = "/ourapt/apt_req";
+		  } catch (Exception ex) {
+			  ex.printStackTrace();
+		  }
+		  return new ModelAndView(modelName, "INIT_DATA", dataMap);
+	  }
 }

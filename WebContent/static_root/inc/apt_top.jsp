@@ -26,16 +26,11 @@ response.setHeader("Cache-Control", "no-cache");
 <script type="text/javascript" src="<c:out value='${COMMON_JS_CONF}' />/jquery.form.js" ></script>
 <script type="text/javascript" src="<c:out value='${COMMON_JS_CONF}' />/jquery.cookie.js" ></script>
 <script type="text/javascript" src="<c:out value='${COMMON_JS_CONF}' />/jqueryPaging.js"></script><!-- 페이징  -->
-<script type="text/javascript" src="<c:out value='${COMMON_JS_CONF}' />/jquery.PrintArea.js_4.js" ></script><!-- 프린트 javascript -->
-<script type="text/javascript" src="<c:out value='${COMMON_JS_CONF}' />/printThis.js" ></script><!-- 프린트 javascript -->
 <script type="text/javascript" src="<c:out value='${COMMON_JS_CONF}' />/valid.js"></script> <!--  공통  js  -->
 <script type="text/javascript" src="<c:out value='${COMMON_JS_CONF}' />/_link.js"></script> <!--  공통  js  -->
 <script type="text/javascript" src="<c:out value='${COMMON_JS_CONF}' />/fileDownLoad.js"></script> <!--  공통  js  -->
 <script type="text/javascript" src="<c:out value='${COMMON_JS_CONF}' />/apt_common.js"></script> <!--  공통  js  -->
 <script type="text/javascript" src="<c:out value='${COMMON_JS_CONF}' />/jquery.nyroModal.custom.js"></script> <!--  레이어  js  -->
-<script type="text/javascript" src="<c:out value='${COMMON_JS_CONF}' />/calendar/jquery-ui.min.js" ></script><!-- 달력 javascript -->
-<link type="text/css" rel="stylesheet" href="<c:out value='${COMMON_JS_CONF}' />/calendar/jquery-ui.css" media=""/><!-- 달력 CSS -->
-<script type="text/javascript" src="<c:out value='${EDITOR_INC_URL_CONF}' />/cheditor.js" ></script><!-- cheditor 인클루드  -->
 <script type="text/javascript" src="<c:out value='${COMMON_JS_CONF}' />/json2.js"></script> <!--  공통  js  -->
 
 <%

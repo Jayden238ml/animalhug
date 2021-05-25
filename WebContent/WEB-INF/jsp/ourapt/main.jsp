@@ -9,6 +9,17 @@
 			
 		});
 		
+		function fnMove(num){
+			var url = "/apt/apt_cont.do";
+			if(num == "2"){
+				url = "/apt/apt_cont.do";
+			}else if(num == "3"){
+				url = "/apt/apt_req.do";
+			}
+			$('#frm').attr("action", url);
+			$('#frm').submit();
+		}
+		
 	</script>
 
 </head>
@@ -65,20 +76,20 @@
 			
 			<div class="mn_cont" id="cont">
 				<div class="mn_cont_btm">
-					<div id="cont_box" class="box_selfAc clearfix" onclick="#">
+					<div id="cont_box" class="box_selfAc clearfix" onclick="fnMove('1')">
 						<h3>사이트 안내</h3>
 						<p>Our Apt<br/>사이트를 소개합니다.</p>
-						<a href="#">VIEW MORE <span>+</span></a>
+						<a href="javascript:fnMove('1');">VIEW MORE <span>+</span></a>
 					</div>
 					<div id="cont_box" class="box_blue box_jinroRm clearfix" onclick="#">
 						<h3>Q&A</h3>
 						<p>궁금한 모든 내용을 물어보세요.</p>
 						<a href="#">VIEW MORE <span>+</span></a>
 					</div>
-					<div id="cont_box" class="box_jobInfo clearfix" onclick="#">
+					<div id="cont_box" class="box_jobInfo clearfix" onclick="fnMove('3')">
 						<h3>견적요청</h3>
 						<p>DB관리의 편리성, 지금 문의해 보세요.</p>
-						<a href="#">VIEW MORE <span>+</span></a>
+						<a href="javascript:fnMove('3');">VIEW MORE <span>+</span></a>
 					</div>
 					<div id="cont_box" class="box_notice clearfix">
 						<div class="nt_title clearfix">
