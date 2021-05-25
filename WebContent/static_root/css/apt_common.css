@@ -115,7 +115,7 @@ a:hover {text-decoration:none; color:#0071bd;}
 
 
 
-/* 서일대-사이트맵 */
+/* 올마이티컴퍼니-사이트맵 */
 #sitemapSL {width:100%; height:100%; position:fixed; top:0; left:0; z-index:999999; box-sizing:border-box; padding:50px; background:#fff; display:none; overflow-x:scroll;}
 #sitemapSL > div {width:1200px; margin:0 auto; overflow:hidden;}
 #sitemapSL > div > div.site_map_title {position:relative; margin-bottom:30px; padding-bottom:30px; border-bottom:1px solid #ddd; overflow:hidden;}
@@ -777,7 +777,7 @@ ul.progTab li.on a {display:block; color:#fff;}
 
 
 
-/*  서일대 검색창 NEW  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */
+/*  올마이티컴퍼니 검색창 NEW  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */
 /* 관리자 */
 .searchAdm {width:100%; margin-bottom:20px; box-sizing:border-box; border-radius:3px; border:1px solid #e5e5e5; background:rgba(247,248,252,0.5); overflow:hidden;}
 .searchAdm select {width:100% !important; height:40px; box-sizing:border-box; padding:0 5px; border:1px solid #e5e5e5; border-radius:3px; background:url('../apt/images/common/select_arr.png') 98% center no-repeat, #fff; apperance:none; -webkit-appearance:none; -moz-appearance:none;}
@@ -981,7 +981,7 @@ ul.progTab li.on a {display:block; color:#fff;}
 	#user #footer > div > .ft_top > ul > li {float:left; width:24.25%; margin:0 0 0 1%;}
 	#user #footer > div > .ft_top > ul > li:first-child {margin:0;}
 	
-	/* 서일대-사이트맵 */
+	/* 올마이티컴퍼니-사이트맵 */
 	#sitemapSL > div {width:970px;}
 	
 	/* 서브비주얼 */
@@ -1045,7 +1045,7 @@ ul.progTab li.on a {display:block; color:#fff;}
 	#user #footer > div > .ft_btm > li:nth-child(1) {float:none; width:100%; margin-bottom:5px;}
 	#user #footer > div > .ft_btm > li:nth-child(2) {float:none; width:100%;}
 	
-	/* 서일대-사이트맵 */
+	/* 올마이티컴퍼니-사이트맵 */
 	#sitemapSL {display:none !important;}
 
 	/* 서브-네비/비주얼 */

@@ -1,7 +1,7 @@
 ﻿@charset "utf-8";
 
 
-/* 서일대 학생성공관리시스템 - 메인  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+/* 올마이티컴퍼니  - 메인  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
 #main_wrap {position:relative; width:100%;}
 
 
@@ -13,7 +13,7 @@
 .layerPopup > dl > dd {float:right; cursor:pointer;}
 
 
-/* 서일대 온라인 진로검사 팝업 */
+/* 올마이티컴퍼니 온라인 진로검사 팝업 */
 /* .pop_main {position:absolute; top:120px; left:50%; z-index:99999; max-width:450px; transform:translate(-50%); box-shadow:1px 1px 10px rgba(0,0,0,0.2); background:#fff;} */
 .pop_main {position:absolute; top:150px; left:calc(700px + 560px); z-index:9998; width:336px; max-width:450px; transform:translate(-30%); box-shadow:1px 1px 10px rgba(0,0,0,0.2); background:#fff; opacity:0.96;}
 .pop_main .pop_cont {width:100%; box-sizing:border-box; padding:5px; border:1px solid #e5e5e5; background:#fff;}
@@ -24,7 +24,7 @@
 .pop_main .pop_close > a:nth-child(2) {float:right;}
 .pop_main .pop_close > a i {display:inline-block; margin-left:3px; font-size:12px;}
 
-/* 서일대 역량진단 팝업 */
+/* 올마이티컴퍼니 역량진단 팝업 */
 .pop_Camain {position:absolute; top:150px; left:calc(1260px + 370px); z-index:9998; width:314px; max-width:450px; transform:translate(-30%); box-shadow:1px 1px 10px rgba(0,0,0,0.2); background:#fff; opacity:0.96;}
 .pop_Camain .pop_cont {width:100%; box-sizing:border-box; padding:5px; border:1px solid #e5e5e5; background:#fff;}
 .pop_Camain .pop_close {width:100%; box-sizing:border-box; padding:10px; background:#454f63; overflow:hidden;}
@@ -383,7 +383,7 @@
 	/* 공지사항 */
 	.box_notice > ul > li > a {width:70%;}
 	
-	/* 서일대 온라인 진로검사 팝업 */
+	/* 올마이티컴퍼니 온라인 진로검사 팝업 */
 	.pop_main { top:180px;}
 }
 
@@ -428,7 +428,7 @@
 	/* 공지사항 */
 	.box_notice > ul > li > a {width:75%;}
 	
-	/* 서일대 온라인 진로검사 팝업 */
+	/* 올마이티컴퍼니 온라인 진로검사 팝업 */
 	.pop_main { top:150px; left:50%; transform:translate(-50%);}
 }
 
@@ -442,7 +442,7 @@
 	.mn_quick > ul > li > dl dd span {display:block;}
 	.mn_quick > ul > li > dl dd span img {height:40px;}
 	
-	/* 서일대 온라인 진로검사 팝업 */
+	/* 올마이티컴퍼니 온라인 진로검사 팝업 */
 	.pop_main { top:150px; left:50%; transform:translate(-50%);}
 }
 
@@ -451,7 +451,7 @@
 	#MN_card_ext .card-prev {top:-40%;}
 	#MN_card_ext .card-next {top:-40%;}
 	
-	/* 서일대 온라인 진로검사 팝업 */
+	/* 올마이티컴퍼니 온라인 진로검사 팝업 */
 	.pop_main {width:80%; max-width:auto; top:100px; margin:0 auto;}
 	
 }

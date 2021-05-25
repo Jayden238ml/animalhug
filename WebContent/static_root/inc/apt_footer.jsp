@@ -3,7 +3,7 @@
 <footer id="footer">
 	<div class="footer_wrap">
 		<div class="ft_top">
-<!-- 			<h3><img src="/static_root/images/common/footer_logo.png" alt="서일대학교" /></h3> -->
+<!-- 			<h3><img src="/static_root/images/common/footer_logo.png" alt="올마이티컴퍼니" /></h3> -->
 			<div class="ft_menu">
 				<a href="/common/service.do" target="_blank" class="on">이용약관</a>
 				<a href="/common/privacy.do" target="_blank">개인정보취급방침</a>
