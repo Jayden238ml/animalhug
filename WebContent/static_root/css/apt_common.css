@@ -1344,3 +1344,17 @@ ul.progTab li.on a {display:block; color:#fff;}
 .core_btn a {display:inline-block; font-size:15px; color:#fff !important; text-align:center; box-sizing:border-box; padding:10px 25px; border-radius:3px; background:#3375ca;}
 .core_btn a:hover {background:#2f6cba;}
 
+.mBtn1 {display:inline-block; font-size:14px; line-height:18px; color:#fff !important; text-align:center; box-sizing:border-box; padding:6px 10px; border-radius:2px; background:#3375ca;}
+.mBtn1:hover {color:#fff; background:#2f6cba;}
+.mBtn2 {display:inline-block; font-size:14px; line-height:18px; color:#fff !important; text-align:center; box-sizing:border-box; padding:6px 10px; border-radius:2px; background:#44587b;}
+.mBtn2:hover {color:#fff; background:#37507b;}
+.mBtn3 {display:inline-block; font-size:14px; line-height:18px; color:#fff !important; text-align:center; box-sizing:border-box; padding:6px 10px; border-radius:2px; background:#78849e;}
+.mBtn3:hover {color:#fff; background:#6e7991;}
+.mBtn4 {display:inline-block; font-size:14px; line-height:18px; color:#fff !important; text-align:center; box-sizing:border-box; padding:6px 10px; border-radius:2px; background:#099cd2;}
+.mBtn4:hover {color:#fff; background:#0a93c5;}
+.mBtn5 {display:inline-block; font-size:14px; line-height:18px; color:#fff !important; text-align:center; box-sizing:border-box; padding:6px 10px; border-radius:2px; background:#ff9c00;}
+.mBtn5:hover {color:#fff; background:#f59500;}
+.mBtn6 {display:inline-block; font-size:14px; line-height:18px; color:#fff !important; text-align:center; box-sizing:border-box; padding:6px 10px; border-radius:2px; background:#4a863b;}
+.mBtn6:hover {color:#fff; background:#39702b;}
+.mBtn7 {display:inline-block; font-size:14px; line-height:18px; color:#fff !important; text-align:center; box-sizing:border-box; padding:6px 10px; border-radius:2px; background:#d63461;}
+.mBtn7:hover {color:#fff; background:#c22853;}

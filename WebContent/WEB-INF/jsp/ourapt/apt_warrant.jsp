@@ -61,7 +61,14 @@
 							</fieldset>
 						</form>
 						<!-- 검색 끝 -->
-						
+						<dl class="titleEaB">
+							<dt>총 <strong><c:out value="2"/></strong> 건</dt>
+							<dd>
+								<a href="#" class="mBtn3">명단 업로드</a>
+								<a href="#" class="mBtn4">명단다운로드</a>
+								<a href="#" class="mBtn5">SMS다운로드</a>
+							</dd>
+						</dl>
 						<!-- 리스트 -->
 						<div class="bbsJobList">
 							<table summary="청년강소기업체험">
