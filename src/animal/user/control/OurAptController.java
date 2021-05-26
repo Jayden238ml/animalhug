@@ -120,4 +120,16 @@ public class OurAptController extends LincActionController{
 		  }
 		  return new ModelAndView(modelName, "INIT_DATA", dataMap);
 	  }
+	  
+	  @RequestMapping({"/apt/apt_notice.do"})
+	  public ModelAndView apt_notice(@ModelAttribute("requestParam") DataMap dataMap, HttpServletRequest request, HttpServletResponse response)
+	  {
+		  String modelName = "";
+		  try {
+			  modelName = "/ourapt/apt_notice";
+		  } catch (Exception ex) {
+			  ex.printStackTrace();
+		  }
+		  return new ModelAndView(modelName, "INIT_DATA", dataMap);
+	  }
 }

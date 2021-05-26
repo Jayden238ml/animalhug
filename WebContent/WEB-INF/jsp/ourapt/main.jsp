@@ -15,6 +15,8 @@
 				url = "/apt/apt_cont.do";
 			}else if(num == "3"){
 				url = "/apt/apt_req.do";
+			}else if(num == "4"){
+				url = "/apt/apt_notice.do";
 			}
 			$('#frm').attr("action", url);
 			$('#frm').submit();
@@ -99,7 +101,7 @@
 					<div id="cont_box" class="box_notice clearfix">
 						<div class="nt_title clearfix">
 							<h3>공지사항</h3>
-							<a href="#">VIEW MORE <span>+</span></a>
+							<a href="javascript:fnMove('4');">VIEW MORE <span>+</span></a>
 						</div>
 						<p>Our Apt 공지사항.</p>
 						<ul class="nt_list">
