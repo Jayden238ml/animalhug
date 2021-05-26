@@ -20,6 +20,11 @@
 			$('#frm').submit();
 		}
 		
+		function fnWarrant(){
+			$('#frm').attr("action", "/apt/apt_warrant.do");
+			$('#frm').submit();
+		}
+		
 	</script>
 
 </head>
@@ -52,7 +57,7 @@
 								<dd><span><img src="/static_root/apt/images/main/mn_quick01.png" alt="학사 일정" /></span></dd>
 							</dl>
 						</li>
-						<li onclick="#">
+						<li onclick="fnWarrant();">
 							<dl class="clearfix">
 								<dt>
 									<strong>입주자 관리</strong>

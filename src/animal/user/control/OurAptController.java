@@ -108,4 +108,16 @@ public class OurAptController extends LincActionController{
 		  }
 		  return new ModelAndView(modelName, "INIT_DATA", dataMap);
 	  }
+	  
+	  @RequestMapping({"/apt/apt_warrant.do"})
+	  public ModelAndView apt_warrant(@ModelAttribute("requestParam") DataMap dataMap, HttpServletRequest request, HttpServletResponse response)
+	  {
+		  String modelName = "";
+		  try {
+			  modelName = "/ourapt/apt_warrant";
+		  } catch (Exception ex) {
+			  ex.printStackTrace();
+		  }
+		  return new ModelAndView(modelName, "INIT_DATA", dataMap);
+	  }
 }
