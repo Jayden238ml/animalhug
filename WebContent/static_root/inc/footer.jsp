@@ -9,7 +9,7 @@
 			사이트문의 : <strong>csh238ml@gmail.com</strong>
 		</p>
 		<div>
-			Copyright ©2019 <span>애니멀허그</span> All rights reserved.
+			Copyright ©2024 <span>캠퍼라이프</span> All rights reserved.
 		</div>
 	</div>
 </div>

@@ -26,51 +26,52 @@
 		</property>
 	</bean>
 	
-	<bean id="DairyBatch2" class="org.springframework.scheduling.quartz.JobDetailBean">
-		<property name="jobClass" value="animal.batch.DairyBatch2"/>
-		<property name="jobDataAsMap">
-			<map>
-				<entry key="commonImpl" value-ref="commonImpl" />
-				<entry key="transactionManager" value-ref="transactionManager" />
-			</map>
-		</property>
-    </bean>
-	<bean id="DairyTrigger2" class="org.springframework.scheduling.quartz.CronTriggerBean">
-		<property name="jobDetail" ref="DairyBatch2"/>
-		<!--<property name="cronExpression" value="0 0/30 * * * ?"/>-->
-		<property name="cronExpression" value="0 2 0/1 * * ?"/>
+<!-- 	두번째 배치 시작 -->
+<!-- 	<bean id="DairyBatch2" class="org.springframework.scheduling.quartz.JobDetailBean"> -->
+<!-- 		<property name="jobClass" value="animal.batch.DairyBatch2"/> -->
+<!-- 		<property name="jobDataAsMap"> -->
+<!-- 			<map> -->
+<!-- 				<entry key="commonImpl" value-ref="commonImpl" /> -->
+<!-- 				<entry key="transactionManager" value-ref="transactionManager" /> -->
+<!-- 			</map> -->
+<!-- 		</property> -->
+<!--     </bean> -->
+<!-- 	<bean id="DairyTrigger2" class="org.springframework.scheduling.quartz.CronTriggerBean"> -->
+<!-- 		<property name="jobDetail" ref="DairyBatch2"/> -->
+<!-- 		<property name="cronExpression" value="0 2 0/1 * * ?"/> -->
 		
-	</bean>
+<!-- 	</bean> -->
 		
-	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-		<property name="triggers">
-			<list>
-				<ref bean="DairyTrigger2"/>
-			</list>
-		</property>
-	</bean>
-	<bean id="DairyBatch3" class="org.springframework.scheduling.quartz.JobDetailBean">
-		<property name="jobClass" value="animal.batch.DairyBatch3"/>
-		<property name="jobDataAsMap">
-			<map>
-				<entry key="commonImpl" value-ref="commonImpl" />
-				<entry key="transactionManager" value-ref="transactionManager" />
-			</map>
-		</property>
-    </bean>
-	<bean id="DairyTrigger3" class="org.springframework.scheduling.quartz.CronTriggerBean">
-		<property name="jobDetail" ref="DairyBatch3"/>
-		<!--<property name="cronExpression" value="0 0/37 * * * ?"/>-->
-		<property name="cronExpression" value="0 7 0/1 * * ?"/>
-	</bean>
+<!-- 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean"> -->
+<!-- 		<property name="triggers"> -->
+<!-- 			<list> -->
+<!-- 				<ref bean="DairyTrigger2"/> -->
+<!-- 			</list> -->
+<!-- 		</property> -->
+<!-- 	</bean> -->
+	
+<!-- 	세번째 배치 시작 -->	
+<!-- 	<bean id="DairyBatch3" class="org.springframework.scheduling.quartz.JobDetailBean"> -->
+<!-- 		<property name="jobClass" value="animal.batch.DairyBatch3"/> -->
+<!-- 		<property name="jobDataAsMap"> -->
+<!-- 			<map> -->
+<!-- 				<entry key="commonImpl" value-ref="commonImpl" /> -->
+<!-- 				<entry key="transactionManager" value-ref="transactionManager" /> -->
+<!-- 			</map> -->
+<!-- 		</property> -->
+<!--     </bean> -->
+<!-- 	<bean id="DairyTrigger3" class="org.springframework.scheduling.quartz.CronTriggerBean"> -->
+<!-- 		<property name="jobDetail" ref="DairyBatch3"/> -->
+<!-- 		<property name="cronExpression" value="0 7 0/1 * * ?"/> -->
+<!-- 	</bean> -->
 		
-	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-		<property name="triggers">
-			<list>
-				<ref bean="DairyTrigger3"/>
-			</list>
-		</property>
-	</bean>
+<!-- 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean"> -->
+<!-- 		<property name="triggers"> -->
+<!-- 			<list> -->
+<!-- 				<ref bean="DairyTrigger3"/> -->
+<!-- 			</list> -->
+<!-- 		</property> -->
+<!-- 	</bean> -->
 	
 </beans>
 
