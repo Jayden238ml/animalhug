@@ -80,3 +80,31 @@
 @media all and (max-width:768px){.layG_mobileM_G{width:50%;}}
 @media all and (max-width:707px){.layG_mobileM_G{width:60%;}}
 @media all and (max-width:480px){.layG_mobileM_G{width:70%;}}
+
+/* 메인 */
+.contents_area_wrap0{position:relative; overflow:hidden; z-index:15;}
+
+.gpe_contents_box{position:relative; float:left; width:802px; margin-bottom:10px; overflow:hidden; z-index:15;}
+.gpe_contents_box, .gpe_search .inputText, .gpe_search .gpe_search_key, .gpe_munu li.subnav_d02 a, .gpe_munu li.subnav_d03 a, li.gpe_myMenu_relative>ul>li>a{
+	-webkit-box-sizing:border-box; -moz-box-sizing:border-box; box-sizing:border-box;
+	}
+	
+.gpe_pm_conban{position:relative; height:120px; border:1px solid #e6e6e6; overflow:hidden;}
+.gpe_pm_conban .gpe_pm_ban_imgbox{position:relative; width:790px;}
+.gpe_pm_conban .gpe_pm_ban_imgbox a{width:790px; height:120px; display:block; overflow:hidden;}
+.gpe_pm_conban .gpe_pm_ban_imgbox a img{display:block;}
+
+.gpe_pm_conban_code{position:relative; border:1px solid #dadada;}
+
+.gpe_pm_conban_num1{position:relative; border:1px solid #dadada;}
+.gpe_pm_conban_num1 a{width:790px; height:120px; display:block; overflow:hidden;}
+.gpe_pm_conban_num1 a img{display:block;}
+
+.gpe_pm_conban_code{position:relative; border:1px solid #dadada; height:120px;}
+.gpe_pm_conban_code img{vertical-align:bottom;}
+
+.gpe_pm_conban .gpe_prev{position:absolute; display:block; right:14px; bottom:0; width:13px; height:13px; background:url(../imgs/default/default_02.png) no-repeat -431px -16px; cursor:pointer; z-index:15;}
+.gpe_pm_conban .gpe_prev:hover{background:url(../imgs/default/default_02.png) no-repeat -431px -31px;}
+.gpe_pm_conban .gpe_next{position:absolute; display:block; right:0; bottom:0; width:13px; height:13px; background:url(../imgs/default/default_02.png) no-repeat -445px -16px; cursor:pointer; z-index:15;}
+.gpe_pm_conban .gpe_next:hover{background:url(../imgs/default/default_02.png) no-repeat -445px -31px;}
+	

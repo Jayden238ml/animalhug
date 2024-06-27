@@ -128,14 +128,14 @@ public class MainController extends LincActionController
         event_type = xpp.next();
       }
 
-      if (!"".equals(C_CODE)) {
-        dataMap.put("CONTRY", C_CODE);
-        dataMap.put("IP_ADDR", ipAddr);
-        dataMap.put("procedureid", "Common.IpDataInsert");
-        this.commonFacade.processUpdate(dataMap);
-      }
-
-      this.transactionManager.commit(status);
+//      if (!"".equals(C_CODE)) {
+//        dataMap.put("CONTRY", C_CODE);
+//        dataMap.put("IP_ADDR", ipAddr);
+//        dataMap.put("procedureid", "Common.IpDataInsert");
+//        this.commonFacade.processUpdate(dataMap);
+//      }
+//
+//      this.transactionManager.commit(status);
     }
     catch (Exception ex) {
       ex.printStackTrace();
