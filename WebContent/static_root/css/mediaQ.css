@@ -263,7 +263,7 @@
 	
 		.gpe_contents_box{position:relative;float:left;width:802px;margin-bottom:10px;overflow:hidden;z-index:15;}
 		
-			.gpe_pm_conban{position:relative; height:120px; border:1px solid #e6e6e6; overflow:hidden; margin-top:60px;}
+			.gpe_pm_conban{position:relative; height:120px; border:1px solid #e6e6e6; overflow:hidden;}
 			.gpe_pm_conban .gpe_pm_ban_imgbox{position:relative; width:790px;}
 			.gpe_pm_conban .gpe_pm_ban_imgbox a{width:790px; height:120px; display:block; overflow:hidden;}
 			.gpe_pm_conban .gpe_pm_ban_imgbox a img{display:block;}

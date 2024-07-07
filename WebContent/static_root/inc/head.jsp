@@ -1,5 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <link href="/static_root/css/kor-style.css" rel="stylesheet">
+<link href="/static_root/css/nova.css" rel="stylesheet">
+<link href="/static_root/css/mediaQ_wg.css" rel="stylesheet">
+<link href="/static_root/css/mediaQ.css" rel="stylesheet">
+<link href="/static_root/css/xe.min.css" rel="stylesheet">
+<link href="/static_root/css/nova_default.css" rel="stylesheet">
+<link href="/static_root/css/nova_style.css" rel="stylesheet">
+<link href="/static_root/css/nova_widget.css" rel="stylesheet">
 <link rel="shortcut icon" href="/static_root/images/common/favicon2.ico">
 <%@ include file="common.jsp" %>
 <!--[if lt IE 9]>

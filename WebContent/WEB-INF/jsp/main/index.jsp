@@ -41,49 +41,198 @@ function fnRecurit(seq){
 </script>
 	</head>
 	<body>
-		<div id="wrap">
+	<div id="wrap">
 			<!-- 상단영역 -->
 		<%@ include file="/static_root/inc/header.jsp" %>
 		<!-- 상단영역 끝 -->
-
-		<form name="frm"  id="frm" method="post" action="">
-		</form>
-		
-		<div class="main-visual-slick">
-			<div class="mvs-item" style="background:url('/static_root/images/main/dog2.jpg') center top no-repeat; background-size:cover;">
-				<div class="main-copy">
-					<h1>보호중인 유기동물<br />이젠 주인이 되어 주세요.</h1>
-					<div><a href="/user/animal/adoptAnimal.do">자세히보기</a></div>
-				</div>
-			</div>					
-			<div class="mvs-item" style="background:url('/static_root/images/main/dog1.jpg') center top no-repeat; background-size:cover;">
-				<div class="main-copy">
-					<h1>잃어버린 반려동물,<br />보호소에서 안전하게 보호하고 있습니다.</h1>
-					<div><a href="/user/animal/findAnimal.do" >자세히보기</a></div>
+<div class="gpe_allcon_wrap0">
+<div class="contents_area_wrap0">
+	<div class="gpe_contents_box">
+		<div class="gpe_pm_conban">
+			<div class="gpe_pm_ban_imgbox" style="overflow: hidden; position: relative; display: block;">
+				<div class="slides_control" style="position: relative; width: 2370px; height: 120px; left: -790px;">
+					<a href="https://gxeshop.ivyro.net/gdesign_sub_store" target="_blank" style="position: absolute; top: 0px; left: 790px; z-index: 0; display: none;">
+					<img src="https://simpleeye.ivyro.net/xe1710/files/attach/images/7486/032a10322a14d0515a0be12a8fa5da50.png?1719814089159" alt="롤링배너1번"></a>
+					<a href="https://gxeshop.ivyro.net/gdesign_sub_store" target="_blank" style="position: absolute; top: 0px; left: 790px; z-index: 5; display: block;">
+					<img src="https://simpleeye.ivyro.net/xe1710/files/attach/images/7486/434fdc7649abd38bdf5b76deee3f1f96.png" alt="롤링배너2번"></a>
 				</div>
 			</div>
-			<div class="mvs-item" style="background:url('/static_root/images/main/dog3.jpg') center top no-repeat; background-size:cover;">
-				<div class="main-copy">
-					<h1>반려동물을 잃어버렸나요?<br />주위에 널리 알려보세요.</h1>
-					<div><a href="/user/Board/findBoard.do">자세히보기</a></div>
+				<span class="gpe_prev"></span>
+				<span class="gpe_next"></span>
+		<ul class="gpe_pagination"><li class=""><a href="#0">1</a></li><li class="current"><a href="#1">2</a></li></ul></div>
+		
+		
+		<div class="gpe_contents">
+			<div class="gpe_contents_xecon">
+<!-- 	============================================================ 조회수 베스트 START-->			
+				<div class="xe-widget-wrapper " style="float: left; width: 388px; border-width: 0px; border-style: solid; border-color: rgb(0, 0, 0) rgb(255, 255, 255) rgb(0, 0, 0) rgb(0, 0, 0); margin: 10px 15px 0px 0px; background-color: transparent; background-image: none; background-repeat: repeat; background-position: 0% 0%;">
+					<div style="*zoom:1;padding:0px 0px 0px 0px !important;">
+						<div class="gpe_wgPopularT2 b">
+							<h3 class="wgP_title">조회수베스트<a href="11111" class="popu_more"></a></h3><!--타이틀+더보기-->
+							<ul class="wgP_contents">
+								<li class="popu_li">
+									<span class="Ncolor wgp_num01  ">1<span class="wgp_numR">위</span></span>
+									<a onclick="window.open('https://simpleeye.ivyro.net/xe1710/4106','_self')" href="https://simpleeye.ivyro.net/xe1710/4106" class="min481">2014년 샘플그룹 경력사원 모집공고</a>
+									<a onclick="window.open('https://simpleeye.ivyro.net/xe1710/4106','_self')" href="https://simpleeye.ivyro.net/xe1710/4106" class="max480">2014년 샘플그룹 경력사원 모집공고</a>
+									<a onclick="window.open('https://simpleeye.ivyro.net/xe1710/4106','_self')" href="https://simpleeye.ivyro.net/xe1710/4106" class="max320">2014년 샘플그룹 경력사원 모집공고</a>
+									<span class="wgPdate">2014-07-24</span>			
+									<span class="wgPicon jo"></span>
+									<span class="wgPiconTxt jo"></span>
+								</li>
+								<li class="popu_li">
+									<span class="Ncolor  wgp_num02 ">2<span class="wgp_numR">위</span></span>
+									<a onclick="window.open('https://simpleeye.ivyro.net/xe1710/4130','_self')" href="https://simpleeye.ivyro.net/xe1710/4130" class="min481">기업 갤러리이미지 샘플</a>
+									<a onclick="window.open('https://simpleeye.ivyro.net/xe1710/4130','_self')" href="https://simpleeye.ivyro.net/xe1710/4130" class="max480">기업 갤러리이미지 샘플</a>
+									<a onclick="window.open('https://simpleeye.ivyro.net/xe1710/4130','_self')" href="https://simpleeye.ivyro.net/xe1710/4130" class="max320">기업 갤러리이미지 샘플</a>
+									<a href="https://simpleeye.ivyro.net/xe1710/4130#comment" class="reNum">+2</a>			<span class="wgPdate">2014-07-25</span>			<span class="wgPicon jo"></span>
+									<span class="wgPiconTxt jo"></span>
+								</li>
+								<li class="popu_li">
+									<span class="Ncolor   wgp_num03">3<span class="wgp_numR">위</span></span>
+									<a onclick="window.open('https://simpleeye.ivyro.net/xe1710/4167','_self')" href="https://simpleeye.ivyro.net/xe1710/4167" class="min481">네이버 개발자 지원 프로그램 네이버 개발...</a>
+									<a onclick="window.open('https://simpleeye.ivyro.net/xe1710/4167','_self')" href="https://simpleeye.ivyro.net/xe1710/4167" class="max480">네이버 개발자 지원 프로그램 네이버 개발...</a>
+									<a onclick="window.open('https://simpleeye.ivyro.net/xe1710/4167','_self')" href="https://simpleeye.ivyro.net/xe1710/4167" class="max320">네이버 개발자 지원 프로그램 네...</a>
+									<span class="wgPdate">2014-07-26</span>			<span class="wgPicon jo"></span>
+									<span class="wgPiconTxt jo"></span>
+								</li>
+								<li class="popu_li">
+									<span class="Ncolor   ">4<span class="wgp_numR">위</span></span>
+									<a onclick="window.open('https://simpleeye.ivyro.net/xe1710/2491','_self')" href="https://simpleeye.ivyro.net/xe1710/2491" class="min481">LG 류현택이 후배들에게 고마운 마음 전합...</a>
+									<a onclick="window.open('https://simpleeye.ivyro.net/xe1710/2491','_self')" href="https://simpleeye.ivyro.net/xe1710/2491" class="max480">LG 류현택이 후배들에게 고마운 마음 전합...</a>
+									<a onclick="window.open('https://simpleeye.ivyro.net/xe1710/2491','_self')" href="https://simpleeye.ivyro.net/xe1710/2491" class="max320">LG 류현택이 후배들에게 고마운 ...</a>
+									<a href="https://simpleeye.ivyro.net/xe1710/2491#comment" class="reNum">+2</a>			<span class="wgPdate">2014-02-21</span>			<span class="wgPicon jo"></span>
+									<span class="wgPiconTxt jo"></span>
+								</li>
+								<li class="popu_li">
+									<span class="Ncolor   ">5<span class="wgp_numR">위</span></span>
+									<a onclick="window.open('https://simpleeye.ivyro.net/xe1710/2489','_self')" href="https://simpleeye.ivyro.net/xe1710/2489" class="min481">술 취한 언니 집에 와서는, 대박독하고 도...</a>
+									<a onclick="window.open('https://simpleeye.ivyro.net/xe1710/2489','_self')" href="https://simpleeye.ivyro.net/xe1710/2489" class="max480">술 취한 언니 집에 와서는, 대박독하고 도...</a>
+									<a onclick="window.open('https://simpleeye.ivyro.net/xe1710/2489','_self')" href="https://simpleeye.ivyro.net/xe1710/2489" class="max320">술 취한 언니 집에 와서는, 대박...</a>
+									<a href="https://simpleeye.ivyro.net/xe1710/2489#comment" class="reNum">+2</a>			<span class="wgPdate">2014-02-21</span>			<span class="wgPicon jo"></span>
+									<span class="wgPiconTxt jo"></span>
+								</li>
+							</ul>	
+						</div>
+					</div>
 				</div>
+<!-- 	============================================================ 조회수 베스트 END-->				
+<!-- 	============================================================ 추천수 베스트 START-->
+				<div class="xe-widget-wrapper " style="float: left; width: 389px; border-width: 0px; border-style: solid; border-color: rgb(0, 0, 0); margin: 10px 0px 0px; background-color: transparent; background-image: none; background-repeat: repeat; background-position: 0% 0%;">
+					<div style="*zoom:1;padding:0px 0px 0px 0px !important;">
+						<div class="gpe_wgPopularT2 gn">
+							<h3 class="wgP_title">추천수베스트<a href="11111" class="popu_more"></a></h3><!--타이틀+더보기-->
+							<ul class="wgP_contents">
+								<li class="popu_li">
+									<span class="Ncolor wgp_num01 wgp_num01M480  ">1<span class="wgp_numR">위</span></span>
+									<a onclick="window.open('https://simpleeye.ivyro.net/xe1710/7433','_self')" href="https://simpleeye.ivyro.net/xe1710/7433" class="min481">공짜 지폐를 본 노숙자와 명품가방녀 공짜 ...</a>
+									<a onclick="window.open('https://simpleeye.ivyro.net/xe1710/7433','_self')" href="https://simpleeye.ivyro.net/xe1710/7433" class="max480">공짜 지폐를 본 노숙자와 명품가방녀 공짜 ...</a>
+									<a onclick="window.open('https://simpleeye.ivyro.net/xe1710/7433','_self')" href="https://simpleeye.ivyro.net/xe1710/7433" class="max320">공짜 지폐를 본 노숙자와 명품가...</a>
+									<a href="https://simpleeye.ivyro.net/xe1710/7433#comment" class="reNum">+2</a>			<span class="wgPdate">2015-12-23</span>			<span class="wgPicon chu"></span>
+									<span class="wgPiconTxt chu"></span>
+								</li>
+								<li class="popu_li">
+									<span class="Ncolor  wgp_num02 ">2<span class="wgp_numR">위</span></span>
+									<a onclick="window.open('https://simpleeye.ivyro.net/xe1710/7432','_self')" href="https://simpleeye.ivyro.net/xe1710/7432" class="min481">바나나 발음이 어려운 외국인</a>
+									<a onclick="window.open('https://simpleeye.ivyro.net/xe1710/7432','_self')" href="https://simpleeye.ivyro.net/xe1710/7432" class="max480">바나나 발음이 어려운 외국인</a>
+									<a onclick="window.open('https://simpleeye.ivyro.net/xe1710/7432','_self')" href="https://simpleeye.ivyro.net/xe1710/7432" class="max320">바나나 발음이 어려운 외국인</a>
+									<a href="https://simpleeye.ivyro.net/xe1710/7432#comment" class="reNum">+2</a>			<span class="wgPdate">2015-12-23</span>			<span class="wgPicon chu"></span>
+									<span class="wgPiconTxt chu"></span>
+								</li>
+								<li class="popu_li">
+									<span class="Ncolor   wgp_num03">3<span class="wgp_numR">위</span></span>
+									<a onclick="window.open('https://simpleeye.ivyro.net/xe1710/11369','_self')" href="https://simpleeye.ivyro.net/xe1710/11369" class="min481">LG 류현택이 후배들에게 고마운 마음 전합...</a>
+									<a onclick="window.open('https://simpleeye.ivyro.net/xe1710/11369','_self')" href="https://simpleeye.ivyro.net/xe1710/11369" class="max480">LG 류현택이 후배들에게 고마운 마음 전합...</a>
+									<a onclick="window.open('https://simpleeye.ivyro.net/xe1710/11369','_self')" href="https://simpleeye.ivyro.net/xe1710/11369" class="max320">LG 류현택이 후배들에게 고마운 ...</a>
+									<a href="https://simpleeye.ivyro.net/xe1710/11369#comment" class="reNum">+2</a>			<span class="wgPdate">2016-01-25</span>			<span class="wgPicon chu"></span>
+									<span class="wgPiconTxt chu"></span>
+								</li>
+								<li class="popu_li">
+									<span class="Ncolor   ">4<span class="wgp_numR">위</span></span>
+									<a onclick="window.open('https://simpleeye.ivyro.net/xe1710/11358','_self')" href="https://simpleeye.ivyro.net/xe1710/11358" class="min481">LG 류현택이 후배들에게 고마운 마음 전합...</a>
+									<a onclick="window.open('https://simpleeye.ivyro.net/xe1710/11358','_self')" href="https://simpleeye.ivyro.net/xe1710/11358" class="max480">LG 류현택이 후배들에게 고마운 마음 전합...</a>
+									<a onclick="window.open('https://simpleeye.ivyro.net/xe1710/11358','_self')" href="https://simpleeye.ivyro.net/xe1710/11358" class="max320">LG 류현택이 후배들에게 고마운 ...</a>
+									<a href="https://simpleeye.ivyro.net/xe1710/11358#comment" class="reNum">+3</a>			<span class="wgPdate">2016-01-25</span>			<span class="wgPicon chu"></span>
+									<span class="wgPiconTxt chu"></span>
+								</li>
+								<li class="popu_li">
+									<span class="Ncolor   ">5<span class="wgp_numR">위</span></span>
+									<a onclick="window.open('https://simpleeye.ivyro.net/xe1710/11353','_self')" href="https://simpleeye.ivyro.net/xe1710/11353" class="min481">LG 류현택이 후배들에게 고마운 마음 전합...</a>
+									<a onclick="window.open('https://simpleeye.ivyro.net/xe1710/11353','_self')" href="https://simpleeye.ivyro.net/xe1710/11353" class="max480">LG 류현택이 후배들에게 고마운 마음 전합...</a>
+									<a onclick="window.open('https://simpleeye.ivyro.net/xe1710/11353','_self')" href="https://simpleeye.ivyro.net/xe1710/11353" class="max320">LG 류현택이 후배들에게 고마운 ...</a>
+									<a href="https://simpleeye.ivyro.net/xe1710/11353#comment" class="reNum">+1</a>			<span class="wgPdate">2016-01-25</span>			<span class="wgPicon chu"></span>
+									<span class="wgPiconTxt chu"></span>
+								</li>
+							</ul>	
+						</div>
+					</div>
+				</div>
+<!-- 	============================================================ 추천수 베스트 END-->
+<!-- 	============================================================ 캠핑장 둘러보기 START-->
+				<div class="xe-widget-wrapper " style="float: left; width: 100%; border-width: 0px; border-style: solid; border-color: rgb(0, 0, 0); margin: 2px 0px 0px; background-color: transparent; background-image: none; background-repeat: repeat; background-position: 0% 0%;">
+					<div class="gpe_WS_box"> 
+    					<div class="gpe_WS_h2box" style="margin-bottom:px;">
+							<h2 class="gpe_contents_wsTitle" style="color:#007bd3;">캠핑장 둘러보기</h2>
+						</div>
+						<a href="http://1111" class="widgetMoreLink"></a>
+		    			<div style="*zoom:1;padding:0px 0px 0px 0px !important; unicode-bidi:isolate;">
+		    				<div class="widgetNOVAContainer">
+		                		<div class="gpe_wgGalleryADIV" style="unicode-bidi:isolate;">
+									<ul class="gpe_wgGalleryA">
+		        						<li style="width:175px; margin-bottom:px; margin-right:30px;">
+											<a href="https://simpleeye.ivyro.net/xe1710/6345" class="thumb" style="width:175px;height:175px">
+												<img src="https://simpleeye.ivyro.net/xe1710/files/thumbnails/345/006/175x175.crop.jpg" style="width:175px; height:175px" alt="thumbnail">
+											</a>
+											<a href="https://simpleeye.ivyro.net/xe1710/6345" class="title min481" style="width:177px;">설연휴때입을 신상여자니트</a>
+											<a href="https://simpleeye.ivyro.net/xe1710/6345" class="title max480" style="width:177px;">설연휴때입을 신상여자...</a>
+											<a href="https://simpleeye.ivyro.net/xe1710/6345" class="title max320" style="width:177px;">설연휴때입을 신상...</a>
+											<a href="#" onclick="return false;" class="author member_4"><img src="https://simpleeye.ivyro.net/xe1710/modules/point/icons/GPE_icon/18.gif" alt="[레벨:18]" title="포인트:29162point (0%), 레벨:18/30" class="xe_point_level_icon" style="vertical-align:middle;margin-right:3px;">심플아이</a>
+											<a href="https://simpleeye.ivyro.net/xe1710/6345#comment" class="gpe_wgGalleryA_retip0"><span class="retip0_icon"></span>2</a>
+		        						</li>
+										<li style="width:175px; margin-bottom:px; margin-right:30px;">
+											<a href="https://simpleeye.ivyro.net/xe1710/6343" class="thumb" style="width:175px;height:175px">
+												<img src="https://simpleeye.ivyro.net/xe1710/files/thumbnails/343/006/175x175.crop.jpg" style="width:175px; height:175px" alt="thumbnail">
+											</a>
+											<a href="https://simpleeye.ivyro.net/xe1710/6343" class="title min481" style="width:177px;">급매 새상품 신상아디다스</a>
+											<a href="https://simpleeye.ivyro.net/xe1710/6343" class="title max480" style="width:177px;">급매 새상품 신상아디다스</a>
+											<a href="https://simpleeye.ivyro.net/xe1710/6343" class="title max320" style="width:177px;">급매 새상품 신상아...</a>
+											<a href="#" onclick="return false;" class="author member_4"><img src="https://simpleeye.ivyro.net/xe1710/modules/point/icons/GPE_icon/18.gif" alt="[레벨:18]" title="포인트:29162point (0%), 레벨:18/30" class="xe_point_level_icon" style="vertical-align:middle;margin-right:3px;">심플아이</a>
+											<span class="gpe_wgGalleryA_retip0"><span class="retip0_icon"></span>0</span>
+																	
+		        						</li>
+		            					<li style="width:175px; margin-bottom:px; margin-right:30px;">
+											<a href="https://simpleeye.ivyro.net/xe1710/6341" class="thumb" style="width:175px;height:175px">
+												<img src="https://simpleeye.ivyro.net/xe1710/files/thumbnails/341/006/175x175.crop.jpg" style="width:175px; height:175px" alt="thumbnail">
+											</a>
+											<a href="https://simpleeye.ivyro.net/xe1710/6341" class="title min481" style="width:177px;">스프라이트셔츠 특가로 팝니다</a>
+											<a href="https://simpleeye.ivyro.net/xe1710/6341" class="title max480" style="width:177px;">스프라이트셔츠 특가로...</a>
+											<a href="https://simpleeye.ivyro.net/xe1710/6341" class="title max320" style="width:177px;">스프라이트셔츠 특...</a>
+											<a href="#" onclick="return false;" class="author member_4"><img src="https://simpleeye.ivyro.net/xe1710/modules/point/icons/GPE_icon/18.gif" alt="[레벨:18]" title="포인트:29162point (0%), 레벨:18/30" class="xe_point_level_icon" style="vertical-align:middle;margin-right:3px;">심플아이</a>
+											<a href="https://simpleeye.ivyro.net/xe1710/6341#comment" class="gpe_wgGalleryA_retip0"><span class="retip0_icon"></span>3</a>
+		        						</li>
+		            					<li style="width:175px; margin-bottom:px; margin-right:30px;">
+											<a href="https://simpleeye.ivyro.net/xe1710/6339" class="thumb" style="width:175px;height:175px">
+												<img src="https://simpleeye.ivyro.net/xe1710/files/thumbnails/339/006/175x175.crop.jpg" style="width:175px; height:175px" alt="thumbnail">
+											</a>
+											<a href="https://simpleeye.ivyro.net/xe1710/6339" class="title min481" style="width:177px;">1일전에 구입한 한과세트 한과</a>
+											<a href="https://simpleeye.ivyro.net/xe1710/6339" class="title max480" style="width:177px;">1일전에 구입한 한과세...</a>
+											<a href="https://simpleeye.ivyro.net/xe1710/6339" class="title max320" style="width:177px;">1일전에 구입한 한...</a>
+											<a href="#" onclick="return false;" class="author member_4"><img src="https://simpleeye.ivyro.net/xe1710/modules/point/icons/GPE_icon/18.gif" alt="[레벨:18]" title="포인트:29162point (0%), 레벨:18/30" class="xe_point_level_icon" style="vertical-align:middle;margin-right:3px;">심플아이</a>
+											<span class="gpe_wgGalleryA_retip0"><span class="retip0_icon"></span>0</span>
+		        						</li>
+		        					</ul>
+								</div>
+	    					</div>
+	    				</div>
+    				</div>
+    			</div>
+<!-- 	============================================================ 캠핑장 둘러보기 END-->
 			</div>
 		</div>
+	</div>
+</div>
+</div>
 
-		<div style="height:100px; background:#fff;"></div>
-		
-		<!-- 건의하기 -->
-		<div class="inquiry-area">
-			<div>
-				<h1>내가 키우는 반려동물의 이야기를 들려주세요</h1>
-				<h2>반려동물의 이야기를 공유하고 소통하는 공간 입니다.</h2>
-				<dl onclick="location.href='/user/Board/story.do';">
-					<dt>반려동물 이야기</dt>
-					<dd><i class="xi-angle-right"></i></dd>
-				</dl>
-			</div>
-		</div>
-		<!-- 건의하기 끝 -->
+
 
 
 		<!-- 하단영역 -->
